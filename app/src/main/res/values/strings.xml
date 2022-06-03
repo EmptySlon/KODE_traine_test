@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">KODE</string>
+    <string name="input_name_teg_email">Input Name, teg, email...</string>
 </resources>
