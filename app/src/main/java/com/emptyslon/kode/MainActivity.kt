@@ -22,14 +22,6 @@ class MainActivity : AppCompatActivity() {
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
 
-//        val adapter: ArrayAdapter<String>
-//        adapter = ArrayAdapter(
-//            this,
-//            android.R.layout.simple_list_item_1,
-//            data
-//        )
-//        setListAdapter(adapter)
-
 
     }
 }
