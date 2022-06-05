@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class ListUserFragment  : Fragment() {
+class ListUserFragment (val listUser: List<String>)  : Fragment() {
 
-    private val listUser =
-        listOf<String>("All", "Designers", "Analysts", "Managers", "IOS", "Android")
+//    private val listUser =
+//        listOf<String>("All", "Designers", "Analysts", "Managers", "IOS", "Android")
 
 
     override fun onCreateView(
@@ -30,10 +30,10 @@ class ListUserFragment  : Fragment() {
         return view
     }
 
-    companion object {
-
-        @JvmStatic
-        fun newInstance() = ListUserFragment()
-
-    }
+//    companion object {
+//
+//        @JvmStatic
+//        fun newInstance() = ListUserFragment()
+//
+//    }
 }

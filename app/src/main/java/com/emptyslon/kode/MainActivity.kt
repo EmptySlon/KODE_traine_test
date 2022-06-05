@@ -14,17 +14,20 @@ class MainActivity : AppCompatActivity() {
     lateinit var adapterCategory: AdapterHeaderCategories
     val listCategories =
         listOf<String>("All", "Designers", "Analysts", "Managers", "IOS", "Android")
+    var counter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+//        binding.tabCategory.addTab(TabLayout.Tab())
+
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
-                        ListUserFragment.newInstance()
+                        ListUserFragment(listCategories + listOf(counter++.toString()))
                     ).commit()
             }
 
