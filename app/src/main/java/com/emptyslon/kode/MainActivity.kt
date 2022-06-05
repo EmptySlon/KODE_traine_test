@@ -20,7 +20,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        binding.tabCategory.addTab(TabLayout.Tab())
+//        val tab = inflater.inflate(R.layout.fragment_list_user, container, false)
+//        val tab = TabLayout.Tab()
+//        tab.text = "126"
+//        binding.tabCategory.addTab(tab)
 
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
