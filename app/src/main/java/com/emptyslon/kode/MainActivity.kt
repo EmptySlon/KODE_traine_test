@@ -1,9 +1,12 @@
 package com.emptyslon.kode
 
 import android.os.Bundle
+import android.widget.TableLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.emptyslon.kode.databinding.ActivityMainBinding
+import com.google.android.material.tabs.TabLayout
 
 
 class MainActivity : AppCompatActivity() {
@@ -16,19 +19,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        adapterCategory = AdapterHeaderCategories(this, listCategories)
-        binding.recycleCategory.adapter = adapterCategory
-        binding.recycleCategory.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.placeHolderListUsers,
+                        ListUserFragment.newInstance()
+                    ).commit()
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
 
 
-//        val adapter: ArrayAdapter<String>
-//        adapter = ArrayAdapter(
-//            this,
-//            android.R.layout.simple_list_item_1,
-//            data
-//        )
-//        setListAdapter(adapter)
+//        adapterCategory = AdapterHeaderCategories(this, listCategories)
+//        binding.recycleCategory.adapter = adapterCategory
+//        binding.recycleCategory.layoutManager =
+//            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
 
     }

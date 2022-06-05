@@ -28,33 +28,44 @@
 
         />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_category"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabCategory"
         android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/inputSearch"
+        app:layout_constraintTop_toBottomOf="@+id/inputSearch"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scrollbars="horizontal"
+        app:tabMode="auto"
+        app:flow_horizontalAlign="start"
+        >
 
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monday" />
 
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tuesday" />
 
-        app:layout_constraintTop_toBottomOf="@id/inputSearch"
-        app:layout_constraintStart_toStartOf="@id/inputSearch"
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wednesday" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <FrameLayout
+        android:id="@+id/placeHolderListUsers"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/inputSearch"
-        />
+        app:layout_constraintStart_toStartOf="@id/inputSearch"
+        app:layout_constraintTop_toBottomOf="@id/tabCategory">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
