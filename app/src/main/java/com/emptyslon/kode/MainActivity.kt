@@ -1,10 +1,12 @@
 package com.emptyslon.kode
 
 import android.os.Bundle
-import android.widget.TableLayout
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.emptyslon.kode.dataBase.DataBase
 import com.emptyslon.kode.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 
@@ -24,6 +26,10 @@ class MainActivity : AppCompatActivity() {
 //        val tab = TabLayout.Tab()
 //        tab.text = "126"
 //        binding.tabCategory.addTab(tab)
+
+
+
+
 
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {

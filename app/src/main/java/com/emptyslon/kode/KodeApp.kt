@@ -28,7 +28,7 @@ class KodeApp: Application() {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://stoplight.io/mocks/kode-education/trainee-test/25143926/users")
+            .baseUrl("https://stoplight.io/mocks/kode-education/trainee-test/25143926/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

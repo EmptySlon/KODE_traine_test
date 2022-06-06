@@ -6,8 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.emptyslon.kode.Interface.UserApi
+import com.emptyslon.kode.dataBase.DataBase
+import com.emptyslon.kode.R
+import java.util.Optional.of
 
 class ListUserFragment (val listUser: List<String>)  : Fragment() {
 
@@ -24,6 +30,9 @@ class ListUserFragment (val listUser: List<String>)  : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycleListUser)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = AdapterHeaderCategories(listUser)
+
+        val userListVievModel = ViewModelProviders.of(this).get(DataBase::class.java)
+        userListVievModel.fetchUserList((activity?.application as? KodeApp)?.userApi)
 
 
 
