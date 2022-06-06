@@ -44,6 +44,10 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        val newTab = binding.tabCategory.newTab()
+        newTab.text = "153"
+//        binding.tabCategory.addTab(newTab)
+
 
 //        adapterCategory = AdapterHeaderCategories(this, listCategories)
 //        binding.recycleCategory.adapter = adapterCategory
