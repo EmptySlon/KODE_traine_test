@@ -10,7 +10,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 
-class DataBase (application: Application) : AndroidViewModel(application) {
+class UserListViewModel (application: Application) : AndroidViewModel(application) {
 
     private val compositeDisposable = CompositeDisposable()
 

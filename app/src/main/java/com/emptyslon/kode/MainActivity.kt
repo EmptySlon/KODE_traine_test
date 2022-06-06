@@ -1,12 +1,7 @@
 package com.emptyslon.kode
 
 import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import com.emptyslon.kode.dataBase.DataBase
 import com.emptyslon.kode.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 
