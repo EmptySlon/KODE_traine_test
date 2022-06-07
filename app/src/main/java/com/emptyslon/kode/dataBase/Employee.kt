@@ -1,6 +1,6 @@
 package com.emptyslon.kode.dataBase
 
-data class Employees(
+data class Employee(
     val avatarUrl: String,
     val birthday: String,
     val department: String,
