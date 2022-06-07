@@ -12,56 +12,10 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class EmployeesDataBase {
-    var listEmployees: List<Employee>
-
-    init {
-        listEmployees = getEmployeesData()
-    }
 
     companion object {
-       val retrofitClient = RetrofitClient
-
+       val listEmployees  = mutableListOf<Employee>()
     }
 
-
-    private fun getEmployeesData(): List<Employee> {
-
-
-//        val httpLoggingInterceptor = HttpLoggingInterceptor()
-//        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-//
-//        val okHttpClient = OkHttpClient.Builder()
-//            .addInterceptor(httpLoggingInterceptor)
-//            .build()
-//
-//        val retrofit = Retrofit.Builder()
-//            .baseUrl("https://stoplight.io/mocks/kode-education/trainee-test/25143926/")
-//            .client(okHttpClient)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-//            .build()
-//            .create(EmployeesApi::class.java)
-
-        val retrofitData = retrofitClient.retrofit.getData()
-
-        retrofitData.enqueue(object : Callback<EmployeesData?> {
-            override fun onResponse(
-                call: Call<EmployeesData?>,
-                response: Response<EmployeesData?>
-            ) {
-                val listEmployees1 = response.body()?.employees!!
-                for(employee in listEmployees1) {
-                    Log.v("TAG", employee.firstName)
-                }
-                this@EmployeesDataBase.listEmployees = response.body()?.employees!!
-            }
-
-            override fun onFailure(call: Call<EmployeesData?>, t: Throwable) {
-                Log.v("TAG", "message from onFailure: " + t.message)
-            }
-        })
-
-        return listEmployees
-    }
 
 }

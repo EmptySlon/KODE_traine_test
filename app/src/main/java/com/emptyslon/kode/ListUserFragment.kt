@@ -1,5 +1,6 @@
 package com.emptyslon.kode
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ class ListUserFragment (val listUser: List<String>)  : Fragment() {
 //        listOf<String>("All", "Designers", "Analysts", "Managers", "IOS", "Android")
 
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -24,7 +26,10 @@ class ListUserFragment (val listUser: List<String>)  : Fragment() {
         val view = inflater.inflate(R.layout.fragment_list_user, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycleListUser)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = AdapterHeaderCategories(listUser)
+        val adapter = AdapterHeaderCategories(listUser)
+        adapter.notifyDataSetChanged()
+        recyclerView.adapter = adapter
+
 
 //        val userListViewModel = ViewModelProviders.of(this).get(UserListViewModel::class.java)
 //        userListViewModel.fetchUserList((activity?.application as? KodeApp)?.userApi)

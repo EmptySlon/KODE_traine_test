@@ -3,10 +3,15 @@ package com.emptyslon.kode
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
 import com.emptyslon.kode.databinding.ActivityMainBinding
+import com.emptyslon.kode.retrofit.RetrofitClient
 import com.google.android.material.tabs.TabLayout
 import okhttp3.internal.notify
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 const val BASE_URL = "https://stoplight.io/mocks/kode-education/trainee-test/25143926/"
@@ -30,6 +35,43 @@ class MainActivity : AppCompatActivity() {
 //        val  fistEmployee = employeesDataBase.listEmployees.first().firstName
 //        Log.v("TAG", fistEmployee)
 
+        val retrofitData = RetrofitClient.retrofit.getData()
+
+        retrofitData.enqueue(object : Callback<EmployeesData?> {
+            override fun onResponse(
+                call: Call<EmployeesData?>,
+                response: Response<EmployeesData?>
+            ) {
+                val listEmployees1 = response.body()?.employees!!
+                val listName = listEmployees1.map { it.firstName }
+                listEmployees1.map { EmployeesDataBase.listEmployees.add(it) }
+//                for(employee in listEmployees1) {
+//                    Log.v("TAG", employee.firstName)
+//                }
+                supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.placeHolderListUsers,
+                        ListUserFragment(listName)
+                    ).commit()
+
+
+            }
+
+            override fun onFailure(call: Call<EmployeesData?>, t: Throwable) {
+                Log.v("TAG", "message from onFailure: " + t.message)
+            }
+        })
+
+        if ( EmployeesDataBase.listEmployees.isEmpty()) {
+            Log.v("TAG", "EmployeesDataBase.listEmployees is empty")
+        }
+
+        for (employee in EmployeesDataBase.listEmployees ) {
+            Log.v("TAG", "Employees from MainActivity: $employee")
+        }
+
+
+
 
 
 
@@ -45,6 +87,10 @@ class MainActivity : AppCompatActivity() {
                         R.id.placeHolderListUsers,
                         ListUserFragment(listCategories + listOf(counter++.toString()))
                     ).commit()
+
+                for (employee in EmployeesDataBase.listEmployees ) {
+                    Log.v("TAG", "Employees from MainActivity: ${employee.birthday}")
+                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
