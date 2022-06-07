@@ -26,8 +26,8 @@ class ListUserFragment (val listUser: List<String>)  : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = AdapterHeaderCategories(listUser)
 
-        val userListViewModel = ViewModelProviders.of(this).get(UserListViewModel::class.java)
-        userListViewModel.fetchUserList((activity?.application as? KodeApp)?.userApi)
+//        val userListViewModel = ViewModelProviders.of(this).get(UserListViewModel::class.java)
+//        userListViewModel.fetchUserList((activity?.application as? KodeApp)?.userApi)
 
 
 

@@ -10,5 +10,5 @@ interface EmployeesApi {
 
     @GET("./users")
     @Headers("Content-Type: application/json", "Prefer: code=200, dynamic=true")
-    fun getData(): Call<List<Employees>>
+    fun getData(): Call<EmployeesData>
 }

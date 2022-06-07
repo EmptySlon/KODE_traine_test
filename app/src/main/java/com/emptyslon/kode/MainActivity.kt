@@ -5,12 +5,16 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.emptyslon.kode.dataBase.Employees
 import com.emptyslon.kode.dataBase.EmployeesApi
+import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 
@@ -73,32 +77,53 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getEmployeesData() {
-        val retrofitBuilder = Retrofit.Builder()
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://stoplight.io/mocks/kode-education/trainee-test/25143926/")
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BASE_URL)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(EmployeesApi::class.java)
 
-        val retrofitData = retrofitBuilder.getData()
 
-        retrofitData.enqueue(object : Callback<List<Employees>?> {
+
+
+
+
+//
+//        val retrofitBuilder = Retrofit.Builder()
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .baseUrl(BASE_URL)
+//            .build()
+//            .create(EmployeesApi::class.java)
+//
+        val retrofitData = retrofit.getData()
+
+        retrofitData.enqueue(object : Callback<EmployeesData?> {
             override fun onResponse(
-                call: Call<List<Employees>?>,
-                response: Response<List<Employees>?>
+                call: Call<EmployeesData?>,
+                response: Response<EmployeesData?>
             ) {
-                val responseBody = response.body()!!
-                val myStringBuilder = StringBuilder()
-                for (employees in responseBody) {
-                    myStringBuilder.append(employees.firstName)
-                    myStringBuilder.append("\n")
-                    Log.d("MyTag", myStringBuilder.toString() )
+                val listEmployees = response.body()?.employees!!
+
+                for(employee in listEmployees) {
+                    Log.v("TAG", employee.firstName)
 
                 }
+
             }
 
-            override fun onFailure(call: Call<List<Employees>?>, t: Throwable) {
-                Log.d("MyTag", "onFailure:" + t.message )
+            override fun onFailure(call: Call<EmployeesData?>, t: Throwable) {
+                Log.v("TAG", "mesege from onFailure: " + t.message)
             }
         })
     }
 }
+
