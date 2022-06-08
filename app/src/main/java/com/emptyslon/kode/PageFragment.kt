@@ -1,14 +1,9 @@
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.emptyslon.kode.AdapterHeaderCategories
 import com.emptyslon.kode.R
-import com.emptyslon.kode.databinding.ActivityMainBinding
-import com.emptyslon.kode.databinding.FragmentPageBinding
 
 // Here ":" symbol is indicate that LoginFragment
 // is child class of Fragment Class

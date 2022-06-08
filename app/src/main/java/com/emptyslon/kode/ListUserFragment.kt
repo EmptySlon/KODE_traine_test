@@ -6,12 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.emptyslon.kode.dataBase.UserListViewModel
+import com.emptyslon.kode.dataBase.Employee
 
-class ListUserFragment (val listUser: List<String>)  : Fragment() {
+class ListUserFragment (val listUser: List<Employee>)  : Fragment() {
 
 //    private val listUser =
 //        listOf<String>("All", "Designers", "Analysts", "Managers", "IOS", "Android")
@@ -26,7 +25,7 @@ class ListUserFragment (val listUser: List<String>)  : Fragment() {
         val view = inflater.inflate(R.layout.fragment_list_user, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycleListUser)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        val adapter = AdapterHeaderCategories(listUser)
+        val adapter = AdapterEmploees(listUser)
         adapter.notifyDataSetChanged()
         recyclerView.adapter = adapter
 

@@ -7,18 +7,19 @@ import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
 import com.emptyslon.kode.databinding.ActivityMainBinding
 import com.emptyslon.kode.retrofit.RetrofitClient
+import com.github.javafaker.Faker
 import com.google.android.material.tabs.TabLayout
-import okhttp3.internal.notify
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
 const val BASE_URL = "https://stoplight.io/mocks/kode-education/trainee-test/25143926/"
+//const val LIST_department = listOf("All", "Designers", "Analysts", "Managers", "IOS", "Android")
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    lateinit var adapterCategory: AdapterHeaderCategories
+    lateinit var adapterCategory: AdapterEmploees
     val listCategories =
         listOf<String>("All", "Designers", "Analysts", "Managers", "IOS", "Android")
     var counter = 0
@@ -27,13 +28,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        val tab = inflater.inflate(R.layout.fragment_list_user, container, false)
-//        val tab = TabLayout.Tab()
-//        tab.text = "126"
-//        binding.tabCategory.addTab(tab)
-        val employeesDataBase = EmployeesDataBase()
-//        val  fistEmployee = employeesDataBase.listEmployees.first().firstName
-//        Log.v("TAG", fistEmployee)
 
         val retrofitData = RetrofitClient.retrofit.getData()
 
@@ -42,16 +36,17 @@ class MainActivity : AppCompatActivity() {
                 call: Call<EmployeesData?>,
                 response: Response<EmployeesData?>
             ) {
-                val listEmployees1 = response.body()?.employees!!
-                val listName = listEmployees1.map { it.firstName }
-                listEmployees1.map { EmployeesDataBase.listEmployees.add(it) }
+                val faker = Faker()
+                val listEmployees = response.body()?.employees!!
+                listEmployees.map { it.avatarUrl = faker.avatar().image() }
+                listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
 //                for(employee in listEmployees1) {
 //                    Log.v("TAG", employee.firstName)
 //                }
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
-                        ListUserFragment(listName)
+                        ListUserFragment(listEmployees)
                     ).commit()
 
 
@@ -72,20 +67,12 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
-
-
-
-
-
-
-
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
-                        ListUserFragment(listCategories + listOf(counter++.toString()))
+                        ListUserFragment( EmployeesDataBase.listEmployees)
                     ).commit()
 
                 for (employee in EmployeesDataBase.listEmployees ) {
@@ -105,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
         val newTab = binding.tabCategory.newTab()
         newTab.text = "153"
-//        binding.tabCategory.addTab(newTab)
+        binding.tabCategory.addTab(newTab)
 
 
 //        adapterCategory = AdapterHeaderCategories(this, listCategories)
@@ -115,6 +102,8 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
 
 
 }
