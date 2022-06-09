@@ -15,19 +15,30 @@ import retrofit2.Response
 
 
 const val BASE_URL = "https://stoplight.io/mocks/kode-education/trainee-test/25143926/"
-//const val LIST_department = listOf("All", "Designers", "Analysts", "Managers", "IOS", "Android")
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var adapterCategory: AdapterEmploees
-    val listCategories =
-        listOf<String>("All", "Designers", "Analysts", "Managers", "IOS", "Android")
+    private val listDepartment =
+        listOf<String>(
+            "all", "android", "ios", "design", "management", "qa", "back_office",
+            "frontend", "hr", "pr", "backend", "support", "analytics",
+        )
     var counter = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        for (department in listDepartment) {
+            val newTab = binding.tabCategory.newTab()
+            newTab.text = department
+            binding.tabCategory.addTab(newTab)
+        }
+
 
         val retrofitData = RetrofitClient.retrofit.getData()
 
@@ -57,11 +68,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        if ( EmployeesDataBase.listEmployees.isEmpty()) {
+        if (EmployeesDataBase.listEmployees.isEmpty()) {
             Log.v("TAG", "EmployeesDataBase.listEmployees is empty")
         }
 
-        for (employee in EmployeesDataBase.listEmployees ) {
+        for (employee in EmployeesDataBase.listEmployees) {
             Log.v("TAG", "Employees from MainActivity: $employee")
         }
 
@@ -72,10 +83,10 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
-                        ListUserFragment( EmployeesDataBase.listEmployees)
+                        ListUserFragment(EmployeesDataBase.getListEmployeesFromDepartment(tab!!.text.toString()))
                     ).commit()
 
-                for (employee in EmployeesDataBase.listEmployees ) {
+                for (employee in EmployeesDataBase.listEmployees) {
                     Log.v("TAG", "Employees from MainActivity: ${employee.birthday}")
                 }
             }
@@ -90,9 +101,13 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        val newTab = binding.tabCategory.newTab()
-        newTab.text = "153"
-        binding.tabCategory.addTab(newTab)
+        for (inputDepartment in EmployeesDataBase.getListAllDepartment()) {
+            if (inputDepartment !in listDepartment) {
+                val newTab = binding.tabCategory.newTab()
+                newTab.text = inputDepartment
+                binding.tabCategory.addTab(newTab)
+            }
+        }
 
 
 //        adapterCategory = AdapterHeaderCategories(this, listCategories)
@@ -102,8 +117,6 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-
-
 
 
 }

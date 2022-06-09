@@ -14,7 +14,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 class EmployeesDataBase {
 
     companion object {
-       val listEmployees  = mutableListOf<Employee>()
+        val listEmployees = mutableListOf<Employee>()
+        fun getListAllDepartment(): List<String> =
+            listEmployees.map { it.department }.toSet().toList()
+
+        fun getListEmployeesFromDepartment(department: String): List<Employee> =
+            listEmployees.filter { it.department.uppercase() == department.uppercase() }
+
     }
 
 
