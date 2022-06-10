@@ -10,6 +10,7 @@ import com.emptyslon.kode.databinding.ActivityMainBinding
 import com.emptyslon.kode.retrofit.RetrofitClient
 import com.github.javafaker.Faker
 import com.google.android.material.tabs.TabLayout
+import com.unsplash.pickerandroid.photopicker.UnsplashPhotoPicker
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,6 +40,8 @@ class MainActivity : AppCompatActivity() {
             newTab.text = department
             binding.tabCategory.addTab(newTab)
         }
+
+        UnsplashPhotoPicker.init()
 
 
         val retrofitData = RetrofitClient.retrofit.getData()
