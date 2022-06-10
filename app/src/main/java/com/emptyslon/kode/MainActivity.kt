@@ -2,6 +2,7 @@ package com.emptyslon.kode
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
@@ -51,14 +52,15 @@ class MainActivity : AppCompatActivity() {
                 val listEmployees = response.body()?.employees!!
                 listEmployees.map { it.avatarUrl = faker.avatar().image() }
                 listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
-//                for(employee in listEmployees1) {
-//                    Log.v("TAG", employee.firstName)
+
 //                }
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
                         ListUserFragment(listEmployees)
                     ).commit()
+
+                binding.progressBar.visibility = ProgressBar.GONE
 
 
             }

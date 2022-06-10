@@ -55,13 +55,15 @@
 
     <ProgressBar
         style="?android:attr/progressBarStyle"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/progress_bar"
         app:layout_constraintTop_toBottomOf="@id/tabCategory"
         app:layout_constraintStart_toStartOf="@id/inputSearch"
         app:layout_constraintEnd_toEndOf="@id/inputSearch"
- />
+        tools:layout_editor_absoluteX="150dp"
+        android:outlineAmbientShadowColor="@color/grey"
+        tools:layout_editor_absoluteY="150dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
