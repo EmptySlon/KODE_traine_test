@@ -21,6 +21,11 @@ class EmployeesDataBase {
         fun getListEmployeesFromDepartment(department: String): List<Employee> =
             listEmployees.filter { it.department.uppercase() == department.uppercase() }
 
+        fun refreshEmployeesData () {
+            listEmployees.clear()
+
+        }
+
     }
 
 
