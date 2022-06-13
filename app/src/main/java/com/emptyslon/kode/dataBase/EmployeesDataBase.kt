@@ -18,10 +18,15 @@ class EmployeesDataBase {
         fun getListAllDepartment(): List<String> =
             listEmployees.map { it.department }.toSet().toList()
 
-        fun getListEmployeesFromDepartment(department: String): List<Employee> =
-            listEmployees.filter { it.department.uppercase() == department.uppercase() }
+        fun deleteEmployees() = listEmployees.clear()
 
-        fun refreshEmployeesData () {
+
+        fun getListEmployeesFromDepartment(department: String): List<Employee> {
+            return if (department.uppercase() == "ALL") listEmployees
+            else listEmployees.filter { it.department.uppercase() == department.uppercase() }
+        }
+
+        fun refreshEmployeesData() {
             listEmployees.clear()
 
         }

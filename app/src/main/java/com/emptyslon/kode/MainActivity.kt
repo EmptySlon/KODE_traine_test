@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
 import com.emptyslon.kode.databinding.ActivityMainBinding
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
             "all", "android", "ios", "design", "management", "qa", "back_office",
             "frontend", "hr", "pr", "backend", "support", "analytics",
         )
+
     var counter = 0
 
 
@@ -33,12 +35,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val tabLayout =  binding.tabCategory
 
         for (department in listDepartment) {
             val newTab = binding.tabCategory.newTab()
             newTab.text = department
             binding.tabCategory.addTab(newTab)
         }
+
 
 
 
@@ -51,15 +55,19 @@ class MainActivity : AppCompatActivity() {
                 response: Response<EmployeesData?>
             ) {
                 val faker = Faker()
-                val listEmployees = response.body()?.employees!!
-                listEmployees.map { it.avatarUrl = faker.avatar().image() }
+                val listEmployees = response.body()?.employees!!.sortedBy { it.firstName }
+
+                listEmployees.map { it.avatarUrl = Common().listUrl.random() }
                 listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
+
+
+
 
 //                }
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
-                        ListUserFragment(listEmployees)
+                        ListUserFragment(listEmployees, tabLayout)
                     ).commit()
 
                 binding.progressBar.visibility = ProgressBar.GONE
@@ -80,14 +88,17 @@ class MainActivity : AppCompatActivity() {
             Log.v("TAG", "Employees from MainActivity: $employee")
         }
 
+//        binding.tabCategory.
+
 
 
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
+
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
-                        ListUserFragment(EmployeesDataBase.getListEmployeesFromDepartment(tab!!.text.toString()))
+                        ListUserFragment(EmployeesDataBase.getListEmployeesFromDepartment(tab!!.text.toString()), tabLayout)
                     ).commit()
 
                 for (employee in EmployeesDataBase.listEmployees) {

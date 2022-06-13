@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.emptyslon.kode.dataBase.Employee
 
-class AdapterEmploees(private val listCategories: List<Employee>) :
+class AdapterEmploees(var listCategories: List<Employee>) :
     RecyclerView.Adapter<AdapterEmploees.CategoriesHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesHolder {
