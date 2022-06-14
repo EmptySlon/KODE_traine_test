@@ -2,7 +2,9 @@ package com.emptyslon.kode
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.dataBase.EmployeesData
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val tabLayout =  binding.tabCategory
+        val tabLayout = binding.tabCategory
 
         for (department in listDepartment) {
             val newTab = binding.tabCategory.newTab()
@@ -43,54 +45,12 @@ class MainActivity : AppCompatActivity() {
             binding.tabCategory.addTab(newTab)
         }
 
+        getData(tabLayout)
 
-
-
-
-        val retrofitData = RetrofitClient.retrofit.getData()
-
-        retrofitData.enqueue(object : Callback<EmployeesData?> {
-            override fun onResponse(
-                call: Call<EmployeesData?>,
-                response: Response<EmployeesData?>
-            ) {
-                val faker = Faker()
-                val listEmployees = response.body()?.employees!!.sortedBy { it.firstName }
-
-                listEmployees.map { it.avatarUrl = Common().listUrl.random() }
-                listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
-
-
-
-
-//                }
-                supportFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.placeHolderListUsers,
-                        ListUserFragment(listEmployees, tabLayout)
-                    ).commit()
-
-                binding.progressBar.visibility = ProgressBar.GONE
-
-
-            }
-
-            override fun onFailure(call: Call<EmployeesData?>, t: Throwable) {
-                Log.v("TAG", "message from onFailure: " + t.message)
-            }
-        })
-
-        if (EmployeesDataBase.listEmployees.isEmpty()) {
-            Log.v("TAG", "EmployeesDataBase.listEmployees is empty")
+        binding.errWindow.findViewById<TextView>(R.id.err_tx_rebut).setOnClickListener {
+            binding.errWindow.visibility = View.GONE
+            getData(tabLayout)
         }
-
-        for (employee in EmployeesDataBase.listEmployees) {
-            Log.v("TAG", "Employees from MainActivity: $employee")
-        }
-
-//        binding.tabCategory.
-
-
 
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -98,7 +58,10 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
-                        ListUserFragment(EmployeesDataBase.getListEmployeesFromDepartment(tab!!.text.toString()), tabLayout)
+                        ListUserFragment(
+                            EmployeesDataBase.getListEmployeesFromDepartment(tab!!.text.toString()),
+                            tabLayout
+                        )
                     ).commit()
 
                 for (employee in EmployeesDataBase.listEmployees) {
@@ -124,13 +87,34 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
 
-//        adapterCategory = AdapterHeaderCategories(this, listCategories)
-//        binding.recycleCategory.adapter = adapterCategory
-//        binding.recycleCategory.layoutManager =
-//            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+    private fun getData(tabLayout: TabLayout) {
+        val retrofitData = RetrofitClient.retrofit.getData()
 
+        retrofitData.enqueue(object : Callback<EmployeesData?> {
+            override fun onResponse(
+                call: Call<EmployeesData?>,
+                response: Response<EmployeesData?>
+            ) {
+                val faker = Faker()
+                val listEmployees = response.body()?.employees!!.sortedBy { it.firstName }
 
+                listEmployees.map { it.avatarUrl = Common().listUrl.random() }
+                listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
+                supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.placeHolderListUsers,
+                        ListUserFragment(listEmployees, tabLayout)
+                    ).commit()
+
+                binding.progressBar.visibility = ProgressBar.GONE
+            }
+
+            override fun onFailure(call: Call<EmployeesData?>, t: Throwable) {
+                binding.errWindow.visibility = View.VISIBLE
+            }
+        })
     }
 
 
