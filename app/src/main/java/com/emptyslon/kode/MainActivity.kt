@@ -1,27 +1,31 @@
 package com.emptyslon.kode
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
+import android.view.MotionEvent
 import android.view.View
-import android.widget.FrameLayout
+import android.view.View.OnTouchListener
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
 import com.emptyslon.kode.databinding.ActivityMainBinding
 import com.emptyslon.kode.retrofit.RetrofitClient
-import com.github.javafaker.Faker
 import com.google.android.material.tabs.TabLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
 
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,6 +37,22 @@ class MainActivity : AppCompatActivity() {
             binding.tabCategory.addTab(newTab)
         }
 
+
+        val inputSearch = binding.inputSearch
+        inputSearch.setOnTouchListener(OnTouchListener { v, event ->
+            val DRAWABLE_LEFT = 0
+            val DRAWABLE_TOP = 1
+            val DRAWABLE_RIGHT = 2
+            val DRAWABLE_BOTTOM = 3
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= inputSearch.right - inputSearch.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
+                    Toast.makeText(this, "click work!!", Toast.LENGTH_SHORT).show()
+                    return@OnTouchListener true
+                }
+            }
+            false
+        })
+
         getData()
 
         binding.errWindow.findViewById<TextView>(R.id.err_tx_rebut).setOnClickListener {
@@ -42,16 +62,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
                         ListUserFragment(EmployeesDataBase.getListEmployeesFromDepartment(tab!!.text.toString()))
                     ).commit()
-
-                for (employee in EmployeesDataBase.listEmployees) {
-                    Log.v("TAG", "Employees from MainActivity: ${employee.birthday}")
-                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -59,8 +74,6 @@ class MainActivity : AppCompatActivity() {
         })
 
     }
-
-
 
 
     private fun getData() {

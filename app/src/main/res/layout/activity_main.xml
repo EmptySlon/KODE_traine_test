@@ -15,7 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/input_name_teg_email"
-        android:drawableLeft="@drawable/ic_baseline_search_24"
+        android:drawableStart="@drawable/ic_baseline_search_24"
+
+        android:drawableEnd="@drawable/ic_sort_user"
         android:shadowColor="@color/purple_700"
         app:circularflow_defaultRadius="10dp"
         app:layout_constraintTop_toTopOf="parent"
