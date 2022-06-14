@@ -3,6 +3,8 @@ package com.emptyslon.kode
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -58,6 +60,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+
+
     private fun getData() {
         val retrofitData = RetrofitClient.retrofit.getData()
         retrofitData.enqueue(object : Callback<EmployeesData?> {
@@ -68,12 +73,14 @@ class MainActivity : AppCompatActivity() {
                 val listEmployees = response.body()?.employees!!.sortedBy { it.firstName }
                 listEmployees.map { it.avatarUrl = Common.listUrl.random() }
                 listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
+                findViewById<LinearLayout>(R.id.list_empty_user).visibility = View.GONE
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
                         ListUserFragment(listEmployees)
                     ).commit()
                 binding.progressBar.visibility = ProgressBar.GONE
+
             }
 
             override fun onFailure(call: Call<EmployeesData?>, t: Throwable) {
