@@ -23,10 +23,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ListUserFragment(var listUser: List<Employee>, val tabLayout: TabLayout) : Fragment() {
+class ListUserFragment(var listUser: List<Employee>) : Fragment() {
 
 //    private val listUser =
 //        listOf<String>("All", "Designers", "Analysts", "Managers", "IOS", "Android")
+
+
+    lateinit var  tabLayout : TabLayout
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -41,6 +44,10 @@ class ListUserFragment(var listUser: List<Employee>, val tabLayout: TabLayout) :
         val adapter = AdapterEmploees(listUser)
         adapter.notifyDataSetChanged()
         recyclerView.adapter = adapter
+
+        tabLayout = activity?.findViewById<TabLayout>(R.id.tabCategory)!!
+
+
 
 
 

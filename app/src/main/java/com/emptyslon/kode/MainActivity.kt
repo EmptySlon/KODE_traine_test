@@ -23,7 +23,6 @@ const val BASE_URL = "https://stoplight.io/mocks/kode-education/trainee-test/251
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    lateinit var adapterCategory: AdapterEmploees
     private val listDepartment =
         listOf<String>(
             "all", "android", "ios", "design", "management", "qa", "back_office",
@@ -45,11 +44,11 @@ class MainActivity : AppCompatActivity() {
             binding.tabCategory.addTab(newTab)
         }
 
-        getData(tabLayout)
+        getData()
 
         binding.errWindow.findViewById<TextView>(R.id.err_tx_rebut).setOnClickListener {
             binding.errWindow.visibility = View.GONE
-            getData(tabLayout)
+            getData()
         }
 
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -58,10 +57,7 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
-                        ListUserFragment(
-                            EmployeesDataBase.getListEmployeesFromDepartment(tab!!.text.toString()),
-                            tabLayout
-                        )
+                        ListUserFragment(EmployeesDataBase.getListEmployeesFromDepartment(tab!!.text.toString()))
                     ).commit()
 
                 for (employee in EmployeesDataBase.listEmployees) {
@@ -89,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun getData(tabLayout: TabLayout) {
+    private fun getData() {
         val retrofitData = RetrofitClient.retrofit.getData()
 
         retrofitData.enqueue(object : Callback<EmployeesData?> {
@@ -105,7 +101,7 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
-                        ListUserFragment(listEmployees, tabLayout)
+                        ListUserFragment(listEmployees)
                     ).commit()
 
                 binding.progressBar.visibility = ProgressBar.GONE
