@@ -17,28 +17,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
-const val BASE_URL = "https://stoplight.io/mocks/kode-education/trainee-test/25143926/"
-
-
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    private val listDepartment =
-        listOf<String>(
-            "all", "android", "ios", "design", "management", "qa", "back_office",
-            "frontend", "hr", "pr", "backend", "support", "analytics",
-        )
-
-    var counter = 0
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val tabLayout = binding.tabCategory
 
-        for (department in listDepartment) {
+        for (department in Common.listDepartment) {
             val newTab = binding.tabCategory.newTab()
             newTab.text = department
             binding.tabCategory.addTab(newTab)
@@ -65,45 +52,27 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-
-            }
-
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
-
-        for (inputDepartment in EmployeesDataBase.getListAllDepartment()) {
-            if (inputDepartment !in listDepartment) {
-                val newTab = binding.tabCategory.newTab()
-                newTab.text = inputDepartment
-                binding.tabCategory.addTab(newTab)
-            }
-        }
 
     }
 
     private fun getData() {
         val retrofitData = RetrofitClient.retrofit.getData()
-
         retrofitData.enqueue(object : Callback<EmployeesData?> {
             override fun onResponse(
                 call: Call<EmployeesData?>,
                 response: Response<EmployeesData?>
             ) {
-                val faker = Faker()
                 val listEmployees = response.body()?.employees!!.sortedBy { it.firstName }
-
-                listEmployees.map { it.avatarUrl = Common().listUrl.random() }
+                listEmployees.map { it.avatarUrl = Common.listUrl.random() }
                 listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
                         ListUserFragment(listEmployees)
                     ).commit()
-
                 binding.progressBar.visibility = ProgressBar.GONE
             }
 
@@ -112,7 +81,5 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-
-
 }
 

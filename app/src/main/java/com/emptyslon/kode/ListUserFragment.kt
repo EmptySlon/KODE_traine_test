@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,13 +26,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class ListUserFragment(var listUser: List<Employee>) : Fragment() {
-
-//    private val listUser =
-//        listOf<String>("All", "Designers", "Analysts", "Managers", "IOS", "Android")
-
-
-    lateinit var  tabLayout : TabLayout
-
+    lateinit var tabLayout: TabLayout
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
@@ -40,30 +36,16 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
         val view = inflater.inflate(R.layout.fragment_list_user, container, false)
         val swipeRefresh = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycleListUser)
-        recyclerView.layoutManager = LinearLayoutManager(activity)
         val adapter = AdapterEmploees(listUser)
+        tabLayout = activity?.findViewById<TabLayout>(R.id.tabCategory)!!
+
+        recyclerView.layoutManager = LinearLayoutManager(activity)
         adapter.notifyDataSetChanged()
         recyclerView.adapter = adapter
 
-        tabLayout = activity?.findViewById<TabLayout>(R.id.tabCategory)!!
-
-
-
-
-
-
-
-
         swipeRefresh.setOnRefreshListener {
             onRefresh(adapter, swipeRefresh)
-//            swipeRefresh.isRefreshing = false
         }
-
-
-//        val userListViewModel = ViewModelProviders.of(this).get(UserListViewModel::class.java)
-//        userListViewModel.fetchUserList((activity?.application as? KodeApp)?.userApi)
-
-
         return view
     }
 
@@ -77,14 +59,13 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
                 call: Call<EmployeesData?>,
                 response: Response<EmployeesData?>
             ) {
-
                 listUser = listOf()
                 EmployeesDataBase.deleteEmployees()
                 val listEmployees = response.body()?.employees!!.sortedBy { it.firstName }
-                listEmployees.map { it.avatarUrl = Common().listUrl.random() }
+                listEmployees.map { it.avatarUrl = Common.listUrl.random() }
                 listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
-                val currentTad = tabLayout.getTabAt(tabLayout.selectedTabPosition)!!.text
 
+                val currentTad = tabLayout.getTabAt(tabLayout.selectedTabPosition)!!.text
                 listUser = if (currentTad == "all") listEmployees
                 else listEmployees.filter { it.department == currentTad }
 
@@ -94,17 +75,9 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
             }
 
             override fun onFailure(call: Call<EmployeesData?>, t: Throwable) {
-                Log.v("TAG", "message from onFailure: " + t.message)
+                activity!!.findViewById<FrameLayout>(R.id.err_window).visibility = View.VISIBLE
             }
         })
-
-
     }
 
-//    companion object {
-//
-//        @JvmStatic
-//        fun newInstance() = ListUserFragment()
-//
-//    }
 }
