@@ -1,20 +1,22 @@
 package com.emptyslon.kode
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
+import android.util.Log
+import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
 import com.emptyslon.kode.databinding.ActivityMainBinding
 import com.emptyslon.kode.retrofit.RetrofitClient
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,6 +25,7 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    lateinit var typeSorted: String
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -30,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        typeSorted = getString(R.string.sorted_alphabet)
 
         for (department in Common.listDepartment) {
             val newTab = binding.tabCategory.newTab()
@@ -46,7 +51,8 @@ class MainActivity : AppCompatActivity() {
             val DRAWABLE_BOTTOM = 3
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= inputSearch.right - inputSearch.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
-                    Toast.makeText(this, "click work!!", Toast.LENGTH_SHORT).show()
+                    showAlertOfSorted()
+//                    Toast.makeText(this, "click work!!", Toast.LENGTH_SHORT).show()
                     return@OnTouchListener true
                 }
             }
@@ -59,6 +65,9 @@ class MainActivity : AppCompatActivity() {
             binding.errWindow.visibility = View.GONE
             getData()
         }
+
+
+
 
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -73,6 +82,22 @@ class MainActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
+    }
+
+    private fun showAlertOfSorted() {
+
+        val listTypeSorters =
+            arrayOf(getString(R.string.sorted_alphabet), getString(R.string.sorted_birthday))
+        val checkedItem = listTypeSorters.indexOf(typeSorted)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Сортировка")
+            .setSingleChoiceItems(listTypeSorters, checkedItem) { dialogInterface, i ->
+                typeSorted = listTypeSorters[i]
+                Log.e("ErTag", typeSorted)
+                dialogInterface.dismiss()
+            }
+            .show()
     }
 
 
