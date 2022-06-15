@@ -26,6 +26,13 @@ class EmployeesDataBase {
             else listEmployees.filter { it.department.uppercase() == department.uppercase() }
         }
 
+        fun searchEmployees (subString: String): List<Employee> {
+            return listEmployees.filter { employee ->
+                employee.isContainsSubstring(subString)
+            }
+
+        }
+
         fun refreshEmployeesData() {
             listEmployees.clear()
 

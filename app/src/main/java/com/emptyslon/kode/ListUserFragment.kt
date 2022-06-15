@@ -18,6 +18,7 @@ import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.dataBase.Employee
 import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
+import com.emptyslon.kode.dataBase.EmployeesDataBase.Companion.listEmployees
 import com.emptyslon.kode.retrofit.RetrofitClient
 import com.github.javafaker.Faker
 import com.google.android.material.tabs.TabLayout
@@ -61,7 +62,10 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
             ) {
                 listUser = listOf()
                 EmployeesDataBase.deleteEmployees()
-                val listEmployees = response.body()?.employees!!.sortedBy { it.firstName }
+                var listEmployees = response.body()?.employees!!
+                listEmployees = if (Common.typeSorted == getString(R.string.sorted_alphabet)) {
+                    listEmployees.sortedBy { it.firstName }
+                } else listEmployees.sortedBy { it.birthday }
                 listEmployees.map { it.avatarUrl = Common.listUrl.random() }
                 listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
 

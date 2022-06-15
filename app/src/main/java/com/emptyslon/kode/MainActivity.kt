@@ -1,7 +1,6 @@
 package com.emptyslon.kode
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -9,9 +8,9 @@ import android.view.View.OnTouchListener
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.emptyslon.kode.common.Common
+import com.emptyslon.kode.common.Common.Companion.typeSorted
 import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
 import com.emptyslon.kode.databinding.ActivityMainBinding
@@ -25,7 +24,6 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    lateinit var typeSorted: String
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -41,6 +39,8 @@ class MainActivity : AppCompatActivity() {
             newTab.text = department
             binding.tabCategory.addTab(newTab)
         }
+
+        resources
 
 
         val inputSearch = binding.inputSearch
@@ -95,9 +95,20 @@ class MainActivity : AppCompatActivity() {
             .setSingleChoiceItems(listTypeSorters, checkedItem) { dialogInterface, i ->
                 typeSorted = listTypeSorters[i]
                 Log.e("ErTag", typeSorted)
+                changeDataInRecycleView()
                 dialogInterface.dismiss()
             }
             .show()
+    }
+
+    private fun changeDataInRecycleView(searchData: String = "ALL") {
+        val listFilteredEmployees = EmployeesDataBase.searchEmployees(searchData)
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.placeHolderListUsers,
+                ListUserFragment(listFilteredEmployees)
+            ).commit()
+
     }
 
 
@@ -108,7 +119,10 @@ class MainActivity : AppCompatActivity() {
                 call: Call<EmployeesData?>,
                 response: Response<EmployeesData?>
             ) {
-                val listEmployees = response.body()?.employees!!.sortedBy { it.firstName }
+                var listEmployees = response.body()?.employees!!
+                listEmployees = if (typeSorted == getString(R.string.sorted_alphabet)) {
+                    listEmployees.sortedBy { it.firstName }
+                } else listEmployees.sortedBy { it.birthday }
                 listEmployees.map { it.avatarUrl = Common.listUrl.random() }
                 listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
                 findViewById<LinearLayout>(R.id.list_empty_user).visibility = View.GONE
