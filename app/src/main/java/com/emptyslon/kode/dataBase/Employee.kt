@@ -11,13 +11,13 @@ data class Employee(
     val position: String,
     val userTag: String
 ) {
-    fun isContainsSubstring (subString: String): Boolean {
+    fun isContainsSubstring(subString: String): Boolean {
         return when {
-            department.contains(Regex(subString)) -> true
-            firstName.contains(Regex(subString)) -> true
-            lastName.contains(Regex(subString)) -> true
-            phone.contains(Regex(subString)) -> true
-            userTag.contains(Regex(subString)) -> true
+            department.contains(subString, true) -> true
+            firstName.contains(subString, true) -> true
+            lastName.contains(subString, true) -> true
+            phone.contains(subString, true) -> true
+            userTag.contains(subString, true) -> true
             else -> false
         }
 

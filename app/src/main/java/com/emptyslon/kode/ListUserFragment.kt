@@ -28,6 +28,8 @@ import retrofit2.Response
 
 class ListUserFragment(var listUser: List<Employee>) : Fragment() {
     lateinit var tabLayout: TabLayout
+    lateinit var recyclerView: RecyclerView
+    lateinit var adapter: AdapterEmploees
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
@@ -36,8 +38,8 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_list_user, container, false)
         val swipeRefresh = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycleListUser)
-        val adapter = AdapterEmploees(listUser)
+        recyclerView = view.findViewById<RecyclerView>(R.id.recycleListUser)
+        adapter = AdapterEmploees(listUser)
         tabLayout = activity?.findViewById<TabLayout>(R.id.tabCategory)!!
 
         recyclerView.layoutManager = LinearLayoutManager(activity)
@@ -48,6 +50,12 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
             onRefresh(adapter, swipeRefresh)
         }
         return view
+    }
+
+
+    fun refreshListData(listUser: List<Employee>, tab: String) {
+        adapter = AdapterEmploees(listUser,tab )
+        recyclerView.adapter = adapter
     }
 
 

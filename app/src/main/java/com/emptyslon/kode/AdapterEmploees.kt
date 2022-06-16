@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.emptyslon.kode.dataBase.Employee
 
-class AdapterEmploees(var listCategories: List<Employee>) :
+class AdapterEmploees(
+    var listCategories: List<Employee>,
+    private val filterDepartment: String = "all"
+) :
     RecyclerView.Adapter<AdapterEmploees.CategoriesHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesHolder {
@@ -22,8 +25,12 @@ class AdapterEmploees(var listCategories: List<Employee>) :
     }
 
     override fun onBindViewHolder(holder: CategoriesHolder, position: Int) {
-        val categories = listCategories[position]
-        holder.bind(categories)
+        val employee = listCategories[position]
+        if (employee.department.lowercase() == filterDepartment
+            || filterDepartment == "all"
+        ) holder.bind(employee)
+        else holder.hideView()
+
 
     }
 
@@ -33,8 +40,13 @@ class AdapterEmploees(var listCategories: List<Employee>) :
     class CategoriesHolder(private val view: View) :
         RecyclerView.ViewHolder(view) {
 
+        fun hideView () {
+            view.visibility = View.GONE
+        }
 
         fun bind(employee: Employee) {
+
+
 
             view.findViewById<TextView>(R.id.userName).text =
                 "${employee.firstName} ${employee.lastName}"

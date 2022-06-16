@@ -24,6 +24,8 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    lateinit var listUserFragment: ListUserFragment
+    lateinit var valueTad: String
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -33,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         typeSorted = getString(R.string.sorted_alphabet)
+        valueTad = Common.listDepartment.first()
+
 
         for (department in Common.listDepartment) {
             val newTab = binding.tabCategory.newTab()
@@ -40,7 +44,6 @@ class MainActivity : AppCompatActivity() {
             binding.tabCategory.addTab(newTab)
         }
 
-        resources
 
 
         val inputSearch = binding.inputSearch
@@ -71,11 +74,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                supportFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.placeHolderListUsers,
-                        ListUserFragment(EmployeesDataBase.getListEmployeesFromDepartment(tab!!.text.toString()))
-                    ).commit()
+                Log.e("TabTag", tab!!.text.toString())
+                valueTad = tab.text.toString()
+                listUserFragment.refreshListData(EmployeesDataBase.listEmployees, valueTad)
+
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -95,25 +97,25 @@ class MainActivity : AppCompatActivity() {
             .setSingleChoiceItems(listTypeSorters, checkedItem) { dialogInterface, i ->
                 typeSorted = listTypeSorters[i]
                 Log.e("ErTag", typeSorted)
-                changeDataInRecycleView()
+                changeDataInRecycleView("and")
                 dialogInterface.dismiss()
             }
             .show()
     }
 
-    private fun changeDataInRecycleView(searchData: String = "ALL") {
-        val listFilteredEmployees = EmployeesDataBase.searchEmployees(searchData)
-        supportFragmentManager.beginTransaction()
-            .replace(
-                R.id.placeHolderListUsers,
-                ListUserFragment(listFilteredEmployees)
-            ).commit()
+    private fun changeDataInRecycleView(searchData: String ) {
+
+        val listFilteredEmployees = EmployeesDataBase
+            .searchEmployees(searchData)
+            .filter { it.department.lowercase() == valueTad }
+        listUserFragment.refreshListData(listFilteredEmployees, valueTad)
 
     }
 
 
     private fun getData() {
         val retrofitData = RetrofitClient.retrofit.getData()
+
         retrofitData.enqueue(object : Callback<EmployeesData?> {
             override fun onResponse(
                 call: Call<EmployeesData?>,
@@ -126,10 +128,11 @@ class MainActivity : AppCompatActivity() {
                 listEmployees.map { it.avatarUrl = Common.listUrl.random() }
                 listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
                 findViewById<LinearLayout>(R.id.list_empty_user).visibility = View.GONE
+                listUserFragment = ListUserFragment(listEmployees)
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
-                        ListUserFragment(listEmployees)
+                        listUserFragment
                     ).commit()
                 binding.progressBar.visibility = ProgressBar.GONE
 
