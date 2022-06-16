@@ -10,43 +10,35 @@ import com.bumptech.glide.Glide
 import com.emptyslon.kode.dataBase.Employee
 
 class AdapterEmploees(
-    var listCategories: List<Employee>,
+    var listEmployees: List<Employee>,
     private val filterDepartment: String = "all"
 ) :
     RecyclerView.Adapter<AdapterEmploees.CategoriesHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesHolder {
+    init {
+        if (filterDepartment != "all")
+            listEmployees = listEmployees.filter { it.department.lowercase() == filterDepartment }
+    }
 
-//        val binding = FoodItemLayoutBinding.inflate(LayoutInflater.from(context),parent,false)
-//        return FoodItemViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_user, parent, false)
         return CategoriesHolder(view)
     }
 
     override fun onBindViewHolder(holder: CategoriesHolder, position: Int) {
-        val employee = listCategories[position]
-        if (employee.department.lowercase() == filterDepartment
-            || filterDepartment == "all"
-        ) holder.bind(employee)
-        else holder.hideView()
-
-
+        val employee = listEmployees[position]
+        holder.bind(employee)
     }
 
-    override fun getItemCount(): Int = listCategories.size
+    override fun getItemCount(): Int = listEmployees.size
 
 
     class CategoriesHolder(private val view: View) :
         RecyclerView.ViewHolder(view) {
 
-        fun hideView () {
-            view.visibility = View.GONE
-        }
 
         fun bind(employee: Employee) {
-
-
 
             view.findViewById<TextView>(R.id.userName).text =
                 "${employee.firstName} ${employee.lastName}"

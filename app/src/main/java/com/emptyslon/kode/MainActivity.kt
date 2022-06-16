@@ -33,20 +33,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         typeSorted = getString(R.string.sorted_alphabet)
         valueTad = Common.listDepartment.first()
-
-
-        for (department in Common.listDepartment) {
-            val newTab = binding.tabCategory.newTab()
-            newTab.text = department
-            binding.tabCategory.addTab(newTab)
-        }
-
-
-
         val inputSearch = binding.inputSearch
+
+        AddTabInTabLayout()
+
+        getData()
+
         inputSearch.setOnTouchListener(OnTouchListener { v, event ->
             val DRAWABLE_LEFT = 0
             val DRAWABLE_TOP = 1
@@ -62,32 +56,32 @@ class MainActivity : AppCompatActivity() {
             false
         })
 
-        getData()
-
         binding.errWindow.findViewById<TextView>(R.id.err_tx_rebut).setOnClickListener {
             binding.errWindow.visibility = View.GONE
             getData()
         }
 
-
-
-
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                Log.e("TabTag", tab!!.text.toString())
-                valueTad = tab.text.toString()
+                valueTad = tab!!.text.toString()
                 listUserFragment.refreshListData(EmployeesDataBase.listEmployees, valueTad)
-
             }
-
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
     }
 
-    private fun showAlertOfSorted() {
 
+    private fun AddTabInTabLayout() {
+        for (department in Common.listDepartment) {
+            val newTab = binding.tabCategory.newTab()
+            newTab.text = department
+            binding.tabCategory.addTab(newTab)
+        }
+    }
+
+    private fun showAlertOfSorted() {
         val listTypeSorters =
             arrayOf(getString(R.string.sorted_alphabet), getString(R.string.sorted_birthday))
         val checkedItem = listTypeSorters.indexOf(typeSorted)
@@ -96,18 +90,17 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Сортировка")
             .setSingleChoiceItems(listTypeSorters, checkedItem) { dialogInterface, i ->
                 typeSorted = listTypeSorters[i]
-                Log.e("ErTag", typeSorted)
-                changeDataInRecycleView("and")
+                EmployeesDataBase.sortedByType(typeSorted)
+                listUserFragment.refreshListData(EmployeesDataBase.listEmployees, valueTad)
                 dialogInterface.dismiss()
             }
             .show()
     }
 
-    private fun changeDataInRecycleView(searchData: String ) {
+    private fun changeDataInRecycleView(searchData: String) {
 
         val listFilteredEmployees = EmployeesDataBase
             .searchEmployees(searchData)
-            .filter { it.department.lowercase() == valueTad }
         listUserFragment.refreshListData(listFilteredEmployees, valueTad)
 
     }
@@ -121,14 +114,15 @@ class MainActivity : AppCompatActivity() {
                 call: Call<EmployeesData?>,
                 response: Response<EmployeesData?>
             ) {
-                var listEmployees = response.body()?.employees!!
-                listEmployees = if (typeSorted == getString(R.string.sorted_alphabet)) {
-                    listEmployees.sortedBy { it.firstName }
-                } else listEmployees.sortedBy { it.birthday }
+                val listEmployees = response.body()?.employees!!
                 listEmployees.map { it.avatarUrl = Common.listUrl.random() }
-                listEmployees.map { EmployeesDataBase.listEmployees.add(it) }
+                EmployeesDataBase.listEmployees = listEmployees.toMutableList()
+                EmployeesDataBase.sortedByType(typeSorted)
+
                 findViewById<LinearLayout>(R.id.list_empty_user).visibility = View.GONE
-                listUserFragment = ListUserFragment(listEmployees)
+
+                listUserFragment =
+                    ListUserFragment(EmployeesDataBase.getListEmployeesFromDepartment(valueTad))
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.placeHolderListUsers,
