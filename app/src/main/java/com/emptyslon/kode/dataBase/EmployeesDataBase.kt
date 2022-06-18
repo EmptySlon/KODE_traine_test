@@ -1,5 +1,6 @@
 package com.emptyslon.kode.dataBase
 
+import android.icu.text.SimpleDateFormat
 import android.util.Log
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.retrofit.RetrofitClient
@@ -11,6 +12,9 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.temporal.TemporalAccessor
 
 class EmployeesDataBase {
 
@@ -37,7 +41,11 @@ class EmployeesDataBase {
         fun sortedByType(type: String) {
             listEmployees =
                 if (type == "По алфавиту") listEmployees.sortedBy { it.firstName }.toMutableList()
-                else listEmployees.sortedBy { it.birthday }.toMutableList()
+                else listEmployees.sortedBy {
+
+
+                    SimpleDateFormat("yyyy-MM-dd").parse(it.birthday)
+                }.toMutableList()
         }
 
     }

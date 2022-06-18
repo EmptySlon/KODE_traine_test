@@ -7,4 +7,5 @@
     <string name="err_msg_3">Попробовать снова</string>
     <string name="sorted_alphabet">По алфавиту</string>
     <string name="sorted_birthday">По дню рождения</string>
+    <string name="sorting">Сортировка</string>
 </resources>

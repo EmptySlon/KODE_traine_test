@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         val checkedItem = listTypeSorters.indexOf(typeSorted)
 
         MaterialAlertDialogBuilder(this)
-            .setTitle("Сортировка")
+            .setTitle(getString(R.string.sorting))
             .setSingleChoiceItems(listTypeSorters, checkedItem) { dialogInterface, i ->
                 typeSorted = listTypeSorters[i]
                 EmployeesDataBase.sortedByType(typeSorted)

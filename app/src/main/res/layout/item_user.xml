@@ -59,8 +59,8 @@
         android:padding="5dp"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintBottom_toBottomOf="@id/department"
         tools:text="25 сен"
         android:visibility="gone"
         tools:visibility = "visible"
