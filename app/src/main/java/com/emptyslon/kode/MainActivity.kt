@@ -1,10 +1,15 @@
 package com.emptyslon.kode
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.ColorFilter
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
+import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -48,7 +53,10 @@ class MainActivity : AppCompatActivity() {
             val DRAWABLE_BOTTOM = 3
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= inputSearch.right - inputSearch.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
-                    showAlertOfSorted()
+                    showAlertOfSorted(inputSearch.compoundDrawables[DRAWABLE_RIGHT])
+//                    if (typeSorted == getString(R.string.sorted_birthday)) {
+//                        inputSearch.compoundDrawables[DRAWABLE_RIGHT].setTint(getColor(R.color.purple_700))
+//                    } else inputSearch.compoundDrawables[DRAWABLE_RIGHT].setTint(getColor(R.color.grey2))
 //                    Toast.makeText(this, "click work!!", Toast.LENGTH_SHORT).show()
                     return@OnTouchListener true
                 }
@@ -66,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                 valueTad = tab!!.text.toString()
                 listUserFragment.refreshListData(EmployeesDataBase.listEmployees, valueTad)
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
@@ -81,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAlertOfSorted() {
+    private fun showAlertOfSorted(drawable: Drawable) {
         val listTypeSorters =
             arrayOf(getString(R.string.sorted_alphabet), getString(R.string.sorted_birthday))
         val checkedItem = listTypeSorters.indexOf(typeSorted)
@@ -92,10 +101,18 @@ class MainActivity : AppCompatActivity() {
                 typeSorted = listTypeSorters[i]
                 EmployeesDataBase.sortedByType(typeSorted)
                 listUserFragment.refreshListData(EmployeesDataBase.listEmployees, valueTad)
+                if (typeSorted == getString(R.string.sorted_birthday)) {
+                    drawable.setTint(getColor(R.color.purple_700))
+                } else drawable.setTint(getColor(R.color.grey2))
                 dialogInterface.dismiss()
             }
             .show()
+
     }
+
+//    if (typeSorted == getString(R.string.sorted_birthday)) {
+//        drawable.setTint(getColor(R.color.purple_700))
+//    } else drawable.setTint(getColor(R.color.grey2))
 
     private fun changeDataInRecycleView(searchData: String) {
 
