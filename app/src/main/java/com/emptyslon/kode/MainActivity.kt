@@ -17,6 +17,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.common.Common.Companion.typeSorted
 import com.emptyslon.kode.dataBase.EmployeesData
@@ -51,12 +52,43 @@ class MainActivity : AppCompatActivity() {
 
         inputSearch.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                listUserFragment
-                    .refreshListData(EmployeesDataBase.searchEmployees(s.toString()), valueTad)
+                Log.v("TAP", "tap!!")
+                val listFilteredEmploees = EmployeesDataBase.searchEmployees(s.toString())
+                if (listFilteredEmploees.isEmpty()) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(
+                            R.id.placeHolderListUsers,
+                            EmptySearhFragment(),
+                            "EMPTY_SEARCH"
+                        ).commit()
+                } else {
+                    Log.v("SEARCH", s.toString())
+
+                    if (supportFragmentManager.findFragmentByTag("EMPTY_SEARCH")?.isVisible ?: false) {
+
+                        listUserFragment =
+                            ListUserFragment(listFilteredEmploees)
+
+                        Log.v("lenght", listFilteredEmploees.size.toString())
+
+                        supportFragmentManager.beginTransaction()
+                            .replace(
+                                R.id.placeHolderListUsers,
+                                listUserFragment
+                            ).commit()
+
+//                        listUserFragment.refreshListData(listFilteredEmploees, valueTad)
+
+                    } else listUserFragment.refreshListData(listFilteredEmploees, valueTad)
+                }
+
+
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+
+            }
         })
 
         inputSearch.setOnTouchListener(OnTouchListener { v, event ->

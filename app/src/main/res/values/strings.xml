@@ -8,4 +8,6 @@
     <string name="sorted_alphabet">По алфавиту</string>
     <string name="sorted_birthday">По дню рождения</string>
     <string name="sorting">Сортировка</string>
+    <string name="try_search_again">Попробуй скорректировать запрос</string>
+    <string name="nothing_found">Мы никого не нашли</string>
 </resources>

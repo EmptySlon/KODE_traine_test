@@ -19,9 +19,13 @@
         <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.241" />
         <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.241" />
         <entry key="..\:/Users/Igor-/AndroidStudioProjects/KODE_traine_test/app/src/main/res/drawable-v24/ic_sort_user_enabled.xml" value="0.217" />
+        <entry key="..\:/Users/Igor-/AndroidStudioProjects/KODE_traine_test/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.3425" />
+        <entry key="..\:/Users/Igor-/AndroidStudioProjects/KODE_traine_test/app/src/main/res/drawable/ic_magnifying_glass.xml" value="0.3425" />
         <entry key="..\:/Users/Igor-/AndroidStudioProjects/KODE_traine_test/app/src/main/res/drawable/ic_sort_user.xml" value="0.217" />
         <entry key="..\:/Users/Igor-/AndroidStudioProjects/KODE_traine_test/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/Igor-/AndroidStudioProjects/KODE_traine_test/app/src/main/res/layout/empty_search.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Igor-/AndroidStudioProjects/KODE_traine_test/app/src/main/res/layout/error_window.xml" value="0.31203703703703706" />
+        <entry key="..\:/Users/Igor-/AndroidStudioProjects/KODE_traine_test/app/src/main/res/layout/fragment_empty_searh.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Igor-/AndroidStudioProjects/KODE_traine_test/app/src/main/res/layout/fragment_list_user.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Igor-/AndroidStudioProjects/KODE_traine_test/app/src/main/res/layout/fragment_page.xml" value="0.20625" />
         <entry key="..\:/Users/Igor-/AndroidStudioProjects/KODE_traine_test/app/src/main/res/layout/item_category.xml" value="0.35462962962962963" />
