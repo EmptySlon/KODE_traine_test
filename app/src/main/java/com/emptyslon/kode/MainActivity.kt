@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
@@ -14,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.common.Common.Companion.typeSorted
 import com.emptyslon.kode.dataBase.EmployeesData
@@ -46,6 +49,16 @@ class MainActivity : AppCompatActivity() {
 
         getData()
 
+        inputSearch.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                listUserFragment
+                    .refreshListData(EmployeesDataBase.searchEmployees(s.toString()), valueTad)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
         inputSearch.setOnTouchListener(OnTouchListener { v, event ->
             val DRAWABLE_LEFT = 0
             val DRAWABLE_TOP = 1
@@ -57,7 +70,6 @@ class MainActivity : AppCompatActivity() {
                     return@OnTouchListener true
                 }
             }
-
             false
         })
 
@@ -71,6 +83,7 @@ class MainActivity : AppCompatActivity() {
                 valueTad = tab!!.text.toString()
                 listUserFragment.refreshListData(EmployeesDataBase.listEmployees, valueTad)
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
