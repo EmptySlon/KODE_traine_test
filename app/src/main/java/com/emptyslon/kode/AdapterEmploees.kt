@@ -5,12 +5,14 @@ import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.dataBase.Employee
+import com.emptyslon.kode.dataBase.EmployeesDataBase
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -44,28 +46,25 @@ class AdapterEmploees(
         RecyclerView.ViewHolder(view) {
 
 
-
         fun bind(employee: Employee) {
-            if (Common.typeSorted == view.context.getString(R.string.sorted_birthday) ) {
-                view.findViewById<TextView>(R.id.birthday).visibility = View.VISIBLE
-
-
-
+            view.findViewById<FrameLayout>(R.id.included_year).visibility = View.GONE
+            if (Common.typeSorted == view.context.getString(R.string.sorted_birthday)) {
                 val date = DateTimeFormatter
                     .ofPattern("yyyy-MM-dd")
                     .parse(employee.birthday)
                 val desiredFormat = DateTimeFormatter
-                    .ofPattern("dd MMM",Locale("ru"))
+                    .ofPattern("dd MMM", Locale("ru"))
                     .format(date)
+                with(view.findViewById<TextView>(R.id.birthday)) {
+                    visibility = View.VISIBLE
+                    text = desiredFormat
+                }
+                if (employee == EmployeesDataBase.getEmployeeWithLastBirthdayInThisYear()) {
+                    view.findViewById<FrameLayout>(R.id.included_year).visibility = View.VISIBLE
+                    view.findViewById<TextView>(R.id.new_year_item_user).text =
+                        (Calendar.getInstance().time.year + 1901).toString()
+                }
 
-//                val date = SimpleDateFormat("yyyy-MM-dd").parse(employee.birthday)
-//                val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
-//                val birthday = dateFormatter.format(date!!)
-//                val birthday =
-//                    LocalDate.parse( employee.birthday, DateTimeFormatter.ofPattern("yyyy-MM-dd") )
-//                        .let { "${it.dayOfMonth} ${it.month}" }
-
-                view.findViewById<TextView>(R.id.birthday).text = desiredFormat
             }
             view.findViewById<TextView>(R.id.userName).text =
                 "${employee.firstName} ${employee.lastName}"

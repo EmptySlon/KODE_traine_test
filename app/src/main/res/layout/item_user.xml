@@ -3,10 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
 
 
     >
+    <include
+        android:id="@+id/included_year"
+        layout="@layout/item_year"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_height="70dp"
+        android:layout_width="match_parent"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
     <ImageView
         android:id="@+id/avatar"
@@ -15,7 +27,7 @@
         android:src="@drawable/ic_baseline_avatar"
         app:layout_constraintStart_toStartOf="parent"
 
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/included_year" />
 
     <TextView
         android:id="@+id/userName"

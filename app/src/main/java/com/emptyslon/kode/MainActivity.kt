@@ -54,13 +54,10 @@ class MainActivity : AppCompatActivity() {
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= inputSearch.right - inputSearch.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
                     showAlertOfSorted(inputSearch.compoundDrawables[DRAWABLE_RIGHT])
-//                    if (typeSorted == getString(R.string.sorted_birthday)) {
-//                        inputSearch.compoundDrawables[DRAWABLE_RIGHT].setTint(getColor(R.color.purple_700))
-//                    } else inputSearch.compoundDrawables[DRAWABLE_RIGHT].setTint(getColor(R.color.grey2))
-//                    Toast.makeText(this, "click work!!", Toast.LENGTH_SHORT).show()
                     return@OnTouchListener true
                 }
             }
+
             false
         })
 
@@ -74,7 +71,6 @@ class MainActivity : AppCompatActivity() {
                 valueTad = tab!!.text.toString()
                 listUserFragment.refreshListData(EmployeesDataBase.listEmployees, valueTad)
             }
-
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
@@ -109,10 +105,6 @@ class MainActivity : AppCompatActivity() {
             .show()
 
     }
-
-//    if (typeSorted == getString(R.string.sorted_birthday)) {
-//        drawable.setTint(getColor(R.color.purple_700))
-//    } else drawable.setTint(getColor(R.color.grey2))
 
     private fun changeDataInRecycleView(searchData: String) {
 

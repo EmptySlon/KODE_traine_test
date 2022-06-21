@@ -41,6 +41,17 @@ class EmployeesDataBase {
 
         }
 
+        fun getEmployeeWithLastBirthdayInThisYear(): Employee {
+            val currentYear = java.util.Calendar.getInstance().time.year
+            val currentTime = java.util.Calendar.getInstance().time.time
+            return listEmployees.filter { employee ->
+                val birthday = SimpleDateFormat("yyyy-MM-dd")
+                    .parse(employee.birthday)
+                    .also { it.year = currentYear }.time
+                birthday - currentTime < 0
+            }.first()
+        }
+
         fun sortedByType(type: String) {
             val currentYear = java.util.Calendar.getInstance().time.year
             val currentTime = java.util.Calendar.getInstance().time.time
