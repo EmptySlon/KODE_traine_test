@@ -46,6 +46,7 @@ class AdapterEmploees(
         RecyclerView.ViewHolder(view) {
 
 
+
         fun bind(employee: Employee) {
             view.findViewById<FrameLayout>(R.id.included_year).visibility = View.GONE
             if (Common.typeSorted == view.context.getString(R.string.sorted_birthday)) {
@@ -77,6 +78,8 @@ class AdapterEmploees(
                 .placeholder(R.drawable.ic_baseline_avatar)
                 .error(R.drawable.ic_baseline_avatar)
                 .into(view.findViewById<ImageView>(R.id.avatar));
+
+
 
         }
 
