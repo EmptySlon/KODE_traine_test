@@ -5,6 +5,7 @@ import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -23,6 +24,17 @@ class AdapterEmploees(
 ) :
     RecyclerView.Adapter<AdapterEmploees.CategoriesHolder>() {
 
+    private lateinit var mListener: onItemClickListener
+
+
+    interface onItemClickListener {
+        fun onItemClick(position: Int)
+    }
+
+    fun setonItemClickListener (listener: onItemClickListener) {
+        mListener = listener
+    }
+
     init {
         if (filterDepartment != "all")
             listEmployees = listEmployees.filter { it.department.lowercase() == filterDepartment }
@@ -31,7 +43,7 @@ class AdapterEmploees(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_user, parent, false)
-        return CategoriesHolder(view)
+        return CategoriesHolder(view, mListener, listEmployees)
     }
 
     override fun onBindViewHolder(holder: CategoriesHolder, position: Int) {
@@ -42,8 +54,15 @@ class AdapterEmploees(
     override fun getItemCount(): Int = listEmployees.size
 
 
-    class CategoriesHolder(private val view: View) :
+    class CategoriesHolder(private val view: View, listener: onItemClickListener, listEmployees: List<Employee>) :
         RecyclerView.ViewHolder(view) {
+
+        init {
+            view.setOnClickListener {
+                listener.onItemClick(adapterPosition)
+            }
+
+        }
 
 
 

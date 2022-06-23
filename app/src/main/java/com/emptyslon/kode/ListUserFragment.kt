@@ -35,6 +35,18 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
         val swipeRefresh = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
         recyclerView = view.findViewById<RecyclerView>(R.id.recycleListUser)
         adapter = AdapterEmploees(listUser)
+        adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                val employee = listUser[position]
+                val detailsEmployeeFragment = DetailsEmployeeFragment(employee)
+                parentFragmentManager
+                    .beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.placeHolderListUsers, detailsEmployeeFragment)
+                    .commit()
+            }
+
+        })
         tabLayout = activity?.findViewById<TabLayout>(R.id.tabCategory)!!
 
         recyclerView.layoutManager = LinearLayoutManager(activity)
@@ -49,6 +61,18 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
 
     fun refreshListData(listUser: List<Employee>, tab: String) {
         adapter = AdapterEmploees(listUser,tab )
+        adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                val employee = listUser[position]
+                val detailsEmployeeFragment = DetailsEmployeeFragment(employee)
+                parentFragmentManager
+                    .beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.placeHolderListUsers, detailsEmployeeFragment)
+                    .commit()
+            }
+
+        })
         recyclerView.adapter = adapter
     }
 

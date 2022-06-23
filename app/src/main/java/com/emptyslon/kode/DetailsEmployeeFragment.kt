@@ -5,9 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.emptyslon.kode.dataBase.Employee
+import com.emptyslon.kode.databinding.FragmentDetailsEmployeeBinding
 
 
-class DetailsEmployeeFragment : Fragment() {
+class DetailsEmployeeFragment (private val employee: Employee) : Fragment() {
+
+    lateinit var binding: FragmentDetailsEmployeeBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,8 +26,22 @@ class DetailsEmployeeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentDetailsEmployeeBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_details_employee, container, false)
+        Glide.with(binding.avatarDetailsItem.context)
+            .load(employee.avatarUrl)
+            .circleCrop()
+            .placeholder(R.drawable.ic_baseline_avatar)
+            .error(R.drawable.ic_baseline_avatar)
+            .into(binding.avatarDetailsItem)
+        binding.userNameDetailsItem.text =
+            "${employee.firstName} ${employee.lastName}"
+        binding.departmentDetailsItem.text = employee.department
+        binding.userTagDetailsItem.text = employee.userTag
+        binding.phoneNumber.text = employee.phone
+
+
+        return binding.root
     }
 
 
