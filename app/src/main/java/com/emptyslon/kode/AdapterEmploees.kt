@@ -58,7 +58,7 @@ class AdapterEmploees(
         RecyclerView.ViewHolder(view) {
 
         init {
-            view.setOnClickListener {
+            view.findViewById<ImageView>(R.id.avatar).setOnClickListener {
                 listener.onItemClick(listEmployees[adapterPosition])
             }
 

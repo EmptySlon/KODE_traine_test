@@ -25,6 +25,7 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
     lateinit var tabLayout: TabLayout
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: AdapterEmploees
+    lateinit var currentTad: String
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
@@ -33,8 +34,10 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_list_user, container, false)
         val swipeRefresh = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
+        tabLayout = activity?.findViewById<TabLayout>(R.id.tabCategory)!!
+        currentTad = tabLayout.getTabAt(tabLayout.selectedTabPosition)!!.text.toString()
         recyclerView = view.findViewById<RecyclerView>(R.id.recycleListUser)
-        adapter = AdapterEmploees(listUser)
+        adapter = AdapterEmploees(listUser, currentTad )
         adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener{
             override fun onItemClick(employee: Employee) {
 
@@ -47,7 +50,7 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
             }
 
         })
-        tabLayout = activity?.findViewById<TabLayout>(R.id.tabCategory)!!
+
 
         recyclerView.layoutManager = LinearLayoutManager(activity)
         adapter.notifyDataSetChanged()
@@ -93,7 +96,7 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
                 EmployeesDataBase.listEmployees = listEmployees.toMutableList()
                 EmployeesDataBase.sortedByType(typeSorted)
 
-                val currentTad = tabLayout.getTabAt(tabLayout.selectedTabPosition)!!.text.toString()
+                currentTad = tabLayout.getTabAt(tabLayout.selectedTabPosition)!!.text.toString()
 
                 adapter.listEmployees = EmployeesDataBase.getListEmployeesFromDepartment(currentTad)
                 swipeRefresh.isRefreshing = false
