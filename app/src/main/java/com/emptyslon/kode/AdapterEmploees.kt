@@ -28,7 +28,7 @@ class AdapterEmploees(
 
 
     interface onItemClickListener {
-        fun onItemClick(position: Int)
+        fun onItemClick(employee: Employee)
     }
 
     fun setonItemClickListener (listener: onItemClickListener) {
@@ -59,7 +59,7 @@ class AdapterEmploees(
 
         init {
             view.setOnClickListener {
-                listener.onItemClick(adapterPosition)
+                listener.onItemClick(listEmployees[adapterPosition])
             }
 
         }

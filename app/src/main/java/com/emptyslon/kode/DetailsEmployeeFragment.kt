@@ -39,6 +39,10 @@ class DetailsEmployeeFragment (private val employee: Employee) : Fragment() {
         binding.departmentDetailsItem.text = employee.department
         binding.userTagDetailsItem.text = employee.userTag
         binding.phoneNumber.text = employee.phone
+        binding.iconBack.setOnClickListener {
+
+            activity?.supportFragmentManager?.popBackStack()
+        }
 
 
         return binding.root

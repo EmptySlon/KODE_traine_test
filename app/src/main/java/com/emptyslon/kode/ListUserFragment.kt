@@ -36,8 +36,8 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
         recyclerView = view.findViewById<RecyclerView>(R.id.recycleListUser)
         adapter = AdapterEmploees(listUser)
         adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener{
-            override fun onItemClick(position: Int) {
-                val employee = listUser[position]
+            override fun onItemClick(employee: Employee) {
+
                 val detailsEmployeeFragment = DetailsEmployeeFragment(employee)
                 parentFragmentManager
                     .beginTransaction()
@@ -62,8 +62,8 @@ class ListUserFragment(var listUser: List<Employee>) : Fragment() {
     fun refreshListData(listUser: List<Employee>, tab: String) {
         adapter = AdapterEmploees(listUser,tab )
         adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener{
-            override fun onItemClick(position: Int) {
-                val employee = listUser[position]
+            override fun onItemClick(employee: Employee) {
+
                 val detailsEmployeeFragment = DetailsEmployeeFragment(employee)
                 parentFragmentManager
                     .beginTransaction()
