@@ -18,6 +18,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.common.Common.Companion.typeSorted
 import com.emptyslon.kode.dataBase.EmployeesData
@@ -33,163 +34,61 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    lateinit var listUserFragment: ListUserFragment
-    lateinit var valueTad: String
+
+    private val currentFragment: Fragment
+        get() = supportFragmentManager.findFragmentById(R.id.fragmentContainer)!!
+
+    private val fragmentListener = object : FragmentManager.FragmentLifecycleCallbacks() {
+        override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
+            super.onFragmentViewCreated(fm, f, v, savedInstanceState)
+//            updateUi()
+        }
+    }
 
 
-    @SuppressLint("ClickableViewAccessibility")
+
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        typeSorted = getString(R.string.sorted_alphabet)
-        valueTad = Common.listDepartment.first()
-        val inputSearch = binding.inputSearch
 
-        AddTabInTabLayout()
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.fragmentContainer, ListUserFragment())
+            .commit()
 
-        getData()
-
-        inputSearch.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.v("TAP", "tap!!")
-                val listFilteredEmploees = EmployeesDataBase.searchEmployees(s.toString())
-                if (listFilteredEmploees.isEmpty()) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(
-                            R.id.placeHolderListUsers,
-                            EmptySearhFragment(),
-                            "EMPTY_SEARCH"
-                        ).commit()
-                } else {
-                    Log.v("SEARCH", s.toString())
-
-                    if (supportFragmentManager.findFragmentByTag("EMPTY_SEARCH")?.isVisible ?: false) {
-
-                        listUserFragment =
-                            ListUserFragment(listFilteredEmploees)
-
-                        Log.v("lenght", listFilteredEmploees.size.toString())
-
-                        supportFragmentManager.beginTransaction()
-                            .replace(
-                                R.id.placeHolderListUsers,
-                                listUserFragment
-                            ).commit()
-
-//                        listUserFragment.refreshListData(listFilteredEmploees, valueTad)
-
-                    } else listUserFragment.refreshListData(listFilteredEmploees, valueTad)
-                }
-
-
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-        })
-
-        inputSearch.setOnTouchListener(OnTouchListener { v, event ->
-            val DRAWABLE_LEFT = 0
-            val DRAWABLE_TOP = 1
-            val DRAWABLE_RIGHT = 2
-            val DRAWABLE_BOTTOM = 3
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= inputSearch.right - inputSearch.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
-                    showAlertOfSorted(inputSearch.compoundDrawables[DRAWABLE_RIGHT])
-                    return@OnTouchListener true
-                }
-            }
-            false
-        })
-
-        binding.errWindow.findViewById<TextView>(R.id.err_tx_rebut).setOnClickListener {
-            binding.errWindow.visibility = View.GONE
-            getData()
-        }
-
-        binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                valueTad = tab!!.text.toString()
-                listUserFragment.refreshListData(EmployeesDataBase.listEmployees, valueTad)
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
+        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
 
     }
 
-
-    private fun AddTabInTabLayout() {
-        for (department in Common.listDepartment) {
-            val newTab = binding.tabCategory.newTab()
-            newTab.text = department
-            binding.tabCategory.addTab(newTab)
-        }
-    }
-
-    private fun showAlertOfSorted(drawable: Drawable) {
-        val listTypeSorters =
-            arrayOf(getString(R.string.sorted_alphabet), getString(R.string.sorted_birthday))
-        val checkedItem = listTypeSorters.indexOf(typeSorted)
-
-        MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.sorting))
-            .setSingleChoiceItems(listTypeSorters, checkedItem) { dialogInterface, i ->
-                typeSorted = listTypeSorters[i]
-                EmployeesDataBase.sortedByType(typeSorted)
-                listUserFragment.refreshListData(EmployeesDataBase.listEmployees, valueTad)
-                if (typeSorted == getString(R.string.sorted_birthday)) {
-                    drawable.setTint(getColor(R.color.purple_700))
-                } else drawable.setTint(getColor(R.color.grey2))
-                dialogInterface.dismiss()
-            }
-            .show()
-
-    }
-
-    private fun changeDataInRecycleView(searchData: String) {
-
-        val listFilteredEmployees = EmployeesDataBase
-            .searchEmployees(searchData)
-        listUserFragment.refreshListData(listFilteredEmployees, valueTad)
-
-    }
+//    private fun updateUi() {
+//        val fragment = currentFragment
+//
+//        if (fragment is HasCustomTitle) {
+//            binding.toolbar.title = getString(fragment.getTitleRes())
+//        } else {
+//            binding.toolbar.title = getString(R.string.fragment_navigation_example)
+//        }
+//
+//        if (supportFragmentManager.backStackEntryCount > 0) {
+//            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//            supportActionBar?.setDisplayShowHomeEnabled(true)
+//        } else {
+//            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+//            supportActionBar?.setDisplayShowHomeEnabled(false)
+//        }
+//
+//        if (fragment is HasCustomAction) {
+//            createCustomToolbarAction(fragment.getCustomAction())
+//        } else {
+//            binding.toolbar.menu.clear()
+//        }
+//    }
 
 
-    private fun getData() {
-        val retrofitData = RetrofitClient.retrofit.getData()
-
-        retrofitData.enqueue(object : Callback<EmployeesData?> {
-            override fun onResponse(
-                call: Call<EmployeesData?>,
-                response: Response<EmployeesData?>
-            ) {
-                val listEmployees = response.body()?.employees!!
-                listEmployees.map { it.avatarUrl = Common.listUrl.random() }
-                EmployeesDataBase.listEmployees = listEmployees.toMutableList()
-                EmployeesDataBase.sortedByType(typeSorted)
-
-                findViewById<LinearLayout>(R.id.list_empty_user).visibility = View.GONE
-
-                listUserFragment =
-                    ListUserFragment(EmployeesDataBase.getListEmployeesFromDepartment(valueTad))
-                supportFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.placeHolderListUsers,
-                        listUserFragment
-                    ).commit()
-                binding.progressBar.visibility = ProgressBar.GONE
-
-            }
-
-            override fun onFailure(call: Call<EmployeesData?>, t: Throwable) {
-                binding.errWindow.visibility = View.VISIBLE
-            }
-        })
-    }
 }
 

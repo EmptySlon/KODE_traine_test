@@ -12,101 +12,50 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.common.Common.Companion.typeSorted
+import com.emptyslon.kode.contract.navigator
 import com.emptyslon.kode.dataBase.Employee
 import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
+import com.emptyslon.kode.databinding.FragmentListUserBinding
 import com.emptyslon.kode.retrofit.RetrofitClient
 import com.google.android.material.tabs.TabLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ListUserFragment(var listUser: List<Employee>) : Fragment() {
+class ListUserFragment() : Fragment() {
+    lateinit var binding: FragmentListUserBinding
+    private lateinit var options: Options
+
     lateinit var tabLayout: TabLayout
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: AdapterEmploees
     lateinit var currentTad: String
 
-    @SuppressLint("NotifyDataSetChanged")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        options = savedInstanceState?.getParcelable(KEY_OPTIONS) ?: Options.DEFAULT
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_list_user, container, false)
-        val swipeRefresh = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
-        tabLayout = activity?.findViewById<TabLayout>(R.id.tabCategory)!!
-        currentTad = tabLayout.getTabAt(tabLayout.selectedTabPosition)!!.text.toString()
-        recyclerView = view.findViewById<RecyclerView>(R.id.recycleListUser)
-        adapter = AdapterEmploees(listUser, currentTad )
-        adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener{
-            override fun onItemClick(employee: Employee) {
+        binding = FragmentListUserBinding.inflate(inflater, container, false)
 
-                val detailsEmployeeFragment = DetailsEmployeeFragment(employee)
-                parentFragmentManager
-                    .beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.placeHolderListUsers, detailsEmployeeFragment)
-                    .commit()
-            }
-
-        })
-
-
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        adapter.notifyDataSetChanged()
-        recyclerView.adapter = adapter
-
-        swipeRefresh.setOnRefreshListener {
-            onRefresh(adapter, swipeRefresh)
+        navigator().listenResult(Options::class.java, viewLifecycleOwner) {
+            this.options = it
         }
-        return view
-    }
 
-    fun refreshListData(listUser: List<Employee>, tab: String) {
-        adapter = AdapterEmploees(listUser,tab )
-        adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener{
-            override fun onItemClick(employee: Employee) {
-
-                val detailsEmployeeFragment = DetailsEmployeeFragment(employee)
-                parentFragmentManager
-                    .beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.placeHolderListUsers, detailsEmployeeFragment)
-                    .commit()
-            }
-
-        })
-        recyclerView.adapter = adapter
+        return binding.root
     }
 
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun onRefresh(adapter: AdapterEmploees, swipeRefresh: SwipeRefreshLayout) {
-        val retrofitData = RetrofitClient.retrofit.getData()
-
-        retrofitData.enqueue(object : Callback<EmployeesData?> {
-            override fun onResponse(
-                call: Call<EmployeesData?>,
-                response: Response<EmployeesData?>
-            ) {
-                listUser = listOf()
-                EmployeesDataBase.deleteEmployees()
-                val listEmployees = response.body()?.employees!!
-                listEmployees.map { it.avatarUrl = Common.listUrl.random() }
-                EmployeesDataBase.listEmployees = listEmployees.toMutableList()
-                EmployeesDataBase.sortedByType(typeSorted)
-
-                currentTad = tabLayout.getTabAt(tabLayout.selectedTabPosition)!!.text.toString()
-
-                adapter.listEmployees = EmployeesDataBase.getListEmployeesFromDepartment(currentTad)
-                swipeRefresh.isRefreshing = false
-                adapter.notifyDataSetChanged()
-            }
-
-            override fun onFailure(call: Call<EmployeesData?>, t: Throwable) {
-                activity!!.findViewById<FrameLayout>(R.id.err_window).visibility = View.VISIBLE
-            }
-        })
+    companion object {
+        @JvmStatic private val KEY_OPTIONS = "OPTIONS"
     }
+
+
 
 }
