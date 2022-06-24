@@ -44,6 +44,11 @@ class ListUserFragment() : Fragment() {
     ): View? {
         binding = FragmentListUserBinding.inflate(inflater, container, false)
 
+//        parentFragmentManager
+//            .beginTransaction()
+//            .add(R.id.fragmentContainerRecycleView, ListUserFragment())
+//            .commit()
+
         navigator().listenResult(Options::class.java, viewLifecycleOwner) {
             this.options = it
         }
