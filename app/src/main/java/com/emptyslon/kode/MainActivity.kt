@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.common.Common.Companion.typeSorted
+import com.emptyslon.kode.contract.Navigator
 import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
 import com.emptyslon.kode.databinding.ActivityMainBinding
@@ -32,7 +33,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity()  {
     lateinit var binding: ActivityMainBinding
 
     private val currentFragment: Fragment
@@ -56,6 +57,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         supportFragmentManager
             .beginTransaction()
             .add(R.id.fragmentContainer, ListUserFragment())
@@ -64,6 +67,8 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
 
     }
+
+
 
 //    private fun updateUi() {
 //        val fragment = currentFragment

@@ -14,17 +14,18 @@ fun Fragment.navigator(): Navigator {
 
 interface Navigator {
 
-    fun showBoxSelectionScreen(options: Options)
 
-    fun showOptionsScreen(options: Options)
-
-    fun showAboutScreen()
-
-    fun showCongratulationsScreen()
-
-    fun goBack()
-
-    fun goToMenu()
+//    fun showBoxSelectionScreen(options: Options)
+//
+//    fun showOptionsScreen(options: Options)
+//
+//    fun showAboutScreen()
+//
+//    fun showCongratulationsScreen()
+//
+//    fun goBack()
+//
+//    fun goToMenu()
 
     fun <T : Parcelable> publishResult(result: T)
 

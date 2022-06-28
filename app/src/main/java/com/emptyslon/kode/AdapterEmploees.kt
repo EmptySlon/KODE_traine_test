@@ -20,7 +20,7 @@ import java.util.*
 
 class AdapterEmploees(
     var listEmployees: List<Employee>,
-    private val filterDepartment: String = "all"
+
 ) :
     RecyclerView.Adapter<AdapterEmploees.CategoriesHolder>() {
 
@@ -35,15 +35,14 @@ class AdapterEmploees(
         mListener = listener
     }
 
-    init {
-        if (filterDepartment != "all")
-            listEmployees = listEmployees.filter { it.department.lowercase() == filterDepartment }
-    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_user, parent, false)
-        return CategoriesHolder(view, mListener, listEmployees)
+        return CategoriesHolder(view,
+//            mListener,
+            listEmployees)
     }
 
     override fun onBindViewHolder(holder: CategoriesHolder, position: Int) {
@@ -54,38 +53,40 @@ class AdapterEmploees(
     override fun getItemCount(): Int = listEmployees.size
 
 
-    class CategoriesHolder(private val view: View, listener: onItemClickListener, listEmployees: List<Employee>) :
+    class CategoriesHolder(private val view: View,
+//                           listener: onItemClickListener,
+                           listEmployees: List<Employee>) :
         RecyclerView.ViewHolder(view) {
 
-        init {
-            view.findViewById<ImageView>(R.id.avatar).setOnClickListener {
-                listener.onItemClick(listEmployees[adapterPosition])
-            }
-
-        }
+//        init {
+//            view.findViewById<ImageView>(R.id.avatar).setOnClickListener {
+//                listener.onItemClick(listEmployees[adapterPosition])
+//            }
+//
+//        }
 
 
 
         fun bind(employee: Employee) {
             view.findViewById<FrameLayout>(R.id.included_year).visibility = View.GONE
-            if (Common.typeSorted == view.context.getString(R.string.sorted_birthday)) {
-                val date = DateTimeFormatter
-                    .ofPattern("yyyy-MM-dd")
-                    .parse(employee.birthday)
-                val desiredFormat = DateTimeFormatter
-                    .ofPattern("dd MMM", Locale("ru"))
-                    .format(date)
-                with(view.findViewById<TextView>(R.id.birthday)) {
-                    visibility = View.VISIBLE
-                    text = desiredFormat
-                }
-                if (employee == EmployeesDataBase.getEmployeeWithLastBirthdayInThisYear()) {
-                    view.findViewById<FrameLayout>(R.id.included_year).visibility = View.VISIBLE
-                    view.findViewById<TextView>(R.id.new_year_item_user).text =
-                        (Calendar.getInstance().time.year + 1901).toString()
-                }
-
-            }
+//            if (Common.typeSorted == view.context.getString(R.string.sorted_birthday)) {
+//                val date = DateTimeFormatter
+//                    .ofPattern("yyyy-MM-dd")
+//                    .parse(employee.birthday)
+//                val desiredFormat = DateTimeFormatter
+//                    .ofPattern("dd MMM", Locale("ru"))
+//                    .format(date)
+//                with(view.findViewById<TextView>(R.id.birthday)) {
+//                    visibility = View.VISIBLE
+//                    text = desiredFormat
+//                }
+//                if (employee == EmployeesDataBase.getEmployeeWithLastBirthdayInThisYear()) {
+//                    view.findViewById<FrameLayout>(R.id.included_year).visibility = View.VISIBLE
+//                    view.findViewById<TextView>(R.id.new_year_item_user).text =
+//                        (Calendar.getInstance().time.year + 1901).toString()
+//                }
+//
+//            }
             view.findViewById<TextView>(R.id.userName).text =
                 "${employee.firstName} ${employee.lastName}"
             view.findViewById<TextView>(R.id.department).text = employee.department
