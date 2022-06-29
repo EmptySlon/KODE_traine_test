@@ -11,9 +11,11 @@
         <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/drawable/ic_my.xml" value="0.241" />
         <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/layout-v28/activity_main.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/layout/activity_main.xml" value="0.32222222222222224" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/layout/empty_search.xml" value="0.24814814814814815" />
         <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/layout/error_window.xml" value="0.32222222222222224" />
         <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/layout/fragment_details_employee.xml" value="0.33" />
-        <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/layout/fragment_list_user.xml" value="0.30462962962962964" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/layout/fragment_empty_searh.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/layout/fragment_list_user.xml" value="0.24814814814814815" />
         <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/layout/fragment_page.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/layout/item_category.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/1/AndroidStudioProjects/KODE/app/src/main/res/layout/item_empty_user.xml" value="0.18333333333333332" />

@@ -2,28 +2,25 @@ package com.emptyslon.kode
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.emptyslon.kode.common.Common
-import com.emptyslon.kode.common.Common.Companion.typeSorted
 import com.emptyslon.kode.contract.EmployeesDataBaseFun
-import com.emptyslon.kode.contract.navigator
 import com.emptyslon.kode.dataBase.Employee
 import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
-import com.emptyslon.kode.dataBase.EmployeesDataBase.Companion.listEmployees
 import com.emptyslon.kode.databinding.FragmentListUserBinding
 import com.emptyslon.kode.retrofit.RetrofitClient
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.fragment_list_user.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,14 +28,11 @@ import retrofit2.Response
 class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
     lateinit var binding: FragmentListUserBinding
     private lateinit var options: Options
-    var inputEmployees = mutableListOf<Employee>()
+    var inputEmployees = listOf<Employee>()
     lateinit var filteredEmployees: List<Employee>
 
-    lateinit var tabLayout: TabLayout
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: AdapterEmploees
-    lateinit var currentTad: String
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +51,8 @@ class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
 
         recyclerView = binding.recycleListUser
         recyclerView.layoutManager = LinearLayoutManager(activity)
+        adapter = AdapterEmploees(inputEmployees)
+        recyclerView.adapter = adapter
 
         getData()
 
@@ -64,12 +60,37 @@ class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val valueTad = tab!!.text.toString()
                 filteredEmployees = inputEmployees.filterFromDepartment(valueTad)
-                adapter = AdapterEmploees(filteredEmployees)
-                recyclerView.adapter = adapter
+                adapter.listEmployees = filteredEmployees
+                adapter.notifyDataSetChanged()
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+
+        binding.swipeRefresh.setOnRefreshListener {
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, ListUserFragment())
+                .commit()
+        }
+
+        binding.inputSearch.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.v("TAP", "tap!!")
+                filteredEmployees = inputEmployees.searchEmployees(s.toString())
+                adapter.listEmployees = filteredEmployees
+                adapter.notifyDataSetChanged()
+                with(binding.emptySearchHolder) {
+                    visibility = if (filteredEmployees.isEmpty()) View.VISIBLE
+                    else View.GONE
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        })
+
 
         return binding.root
     }
@@ -86,10 +107,11 @@ class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
                 listEmployees.map { it.avatarUrl = Common.listUrl.random() }
 
                 EmployeesDataBase.listEmployees = listEmployees.toMutableList()
-                inputEmployees = listEmployees.toMutableList().sortedByType(binding.root.context.getString(R.string.sorted_alphabet))
-                adapter = AdapterEmploees(inputEmployees)
+                inputEmployees =
+                    listEmployees.sortedByType(binding.root.context.getString(R.string.sorted_alphabet))
+
+                adapter.listEmployees = inputEmployees
                 adapter.notifyDataSetChanged()
-                recyclerView.adapter = adapter
                 binding.progressBar.visibility = ProgressBar.GONE
             }
 
@@ -99,8 +121,6 @@ class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
             }
         })
     }
-
-
 
 
     companion object {
@@ -115,25 +135,6 @@ class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
             binding.tabCategory.addTab(newTab)
         }
     }
-
-    private fun refreshListInAdapter(listUser: List<Employee> ) {
-        adapter = AdapterEmploees(listUser )
-        adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener{
-            override fun onItemClick(employee: Employee) {
-
-                val detailsEmployeeFragment = DetailsEmployeeFragment(employee)
-                parentFragmentManager
-                    .beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.fragmentContainer, detailsEmployeeFragment)
-                    .commit()
-            }
-
-        })
-        recyclerView.adapter = adapter
-    }
-
-
 
 
 }

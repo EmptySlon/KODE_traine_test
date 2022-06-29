@@ -14,6 +14,8 @@ fun Fragment.navigator(): Navigator {
 
 interface Navigator {
 
+    fun restartFragment()
+
 
 //    fun showBoxSelectionScreen(options: Options)
 //
@@ -27,8 +29,8 @@ interface Navigator {
 //
 //    fun goToMenu()
 
-    fun <T : Parcelable> publishResult(result: T)
-
-    fun <T : Parcelable> listenResult(clazz: Class<T>, owner: LifecycleOwner, listener: ResultListener<T>)
+//    fun <T : Parcelable> publishResult(result: T)
+//
+//    fun <T : Parcelable> listenResult(clazz: Class<T>, owner: LifecycleOwner, listener: ResultListener<T>)
 
 }

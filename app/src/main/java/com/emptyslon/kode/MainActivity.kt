@@ -33,7 +33,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class MainActivity : AppCompatActivity()  {
+class MainActivity : AppCompatActivity(), Navigator  {
     lateinit var binding: ActivityMainBinding
 
     private val currentFragment: Fragment
@@ -68,6 +68,13 @@ class MainActivity : AppCompatActivity()  {
 
     }
 
+    override fun restartFragment() {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, ListUserFragment())
+            .commit()
+        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
+    }
 
 
 //    private fun updateUi() {
