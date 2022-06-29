@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.common.Common.Companion.typeSorted
+import com.emptyslon.kode.contract.EmployeesDataBaseFun
 import com.emptyslon.kode.contract.navigator
 import com.emptyslon.kode.dataBase.Employee
 import com.emptyslon.kode.dataBase.EmployeesData
@@ -27,7 +28,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ListUserFragment() : Fragment() {
+class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
     lateinit var binding: FragmentListUserBinding
     private lateinit var options: Options
     var inputEmployees = mutableListOf<Employee>()
@@ -38,11 +39,11 @@ class ListUserFragment() : Fragment() {
     lateinit var adapter: AdapterEmploees
     lateinit var currentTad: String
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         options = savedInstanceState?.getParcelable(KEY_OPTIONS) ?: Options.DEFAULT
-
-
     }
 
 
@@ -52,15 +53,28 @@ class ListUserFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentListUserBinding.inflate(inflater, container, false)
+        AddTabInTabLayout()
 
         recyclerView = binding.recycleListUser
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        Log.v("asdasd", "!!!!!!!!!!!!!!!!!!!!!!!")
 
+        getData()
 
+        binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val valueTad = tab!!.text.toString()
+                filteredEmployees = inputEmployees.filterFromDepartment(valueTad)
+                adapter = AdapterEmploees(filteredEmployees)
+                recyclerView.adapter = adapter
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
 
+        return binding.root
+    }
 
-
+    private fun getData() {
         val retrofitData = RetrofitClient.retrofit.getData()
         retrofitData.enqueue(object : Callback<EmployeesData?> {
             override fun onResponse(
@@ -72,15 +86,11 @@ class ListUserFragment() : Fragment() {
                 listEmployees.map { it.avatarUrl = Common.listUrl.random() }
 
                 EmployeesDataBase.listEmployees = listEmployees.toMutableList()
-
-//                listEmployees.forEach { inputEmployees.add(it) }
-//                listEmployees.forEach { Log.v("asdasd", it.firstName) }
-                inputEmployees = listEmployees.toMutableList()
+                inputEmployees = listEmployees.toMutableList().sortedByType(binding.root.context.getString(R.string.sorted_alphabet))
                 adapter = AdapterEmploees(inputEmployees)
                 adapter.notifyDataSetChanged()
                 recyclerView.adapter = adapter
-
-
+                binding.progressBar.visibility = ProgressBar.GONE
             }
 
             override fun onFailure(call: Call<EmployeesData?>, t: Throwable) {
@@ -88,44 +98,42 @@ class ListUserFragment() : Fragment() {
 
             }
         })
-
-        if (inputEmployees.isEmpty()) Log.v("DATA", "inputEmployees is EMPTY")
-        else inputEmployees.forEach { Log.v("asdasd", it.firstName) }
-
-
-
-
-
-
-
-
-
-
-//        inputEmployees = inputEmployees + listOf<Employee>(
-//            Employee(
-//                "asdasd", "15.15.15", "asd", "asdf",
-//                "adsf", "dasf", "dsfdf", "sdfs", "sdf"
-//            )
-//        )
-
-
-
-//        navigator().listenResult(Options::class.java, viewLifecycleOwner) {
-//            this.options = it
-//        }
-
-        return binding.root
     }
 
-    private fun getData() {
 
-    }
 
 
     companion object {
         @JvmStatic
         private val KEY_OPTIONS = "OPTIONS"
     }
+
+    private fun AddTabInTabLayout() {
+        for (department in Common.listDepartment) {
+            val newTab = binding.tabCategory.newTab()
+            newTab.text = department
+            binding.tabCategory.addTab(newTab)
+        }
+    }
+
+    private fun refreshListInAdapter(listUser: List<Employee> ) {
+        adapter = AdapterEmploees(listUser )
+        adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener{
+            override fun onItemClick(employee: Employee) {
+
+                val detailsEmployeeFragment = DetailsEmployeeFragment(employee)
+                parentFragmentManager
+                    .beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.fragmentContainer, detailsEmployeeFragment)
+                    .commit()
+            }
+
+        })
+        recyclerView.adapter = adapter
+    }
+
+
 
 
 }
