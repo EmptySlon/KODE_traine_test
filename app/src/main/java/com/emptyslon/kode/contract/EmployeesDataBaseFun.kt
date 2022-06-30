@@ -21,12 +21,12 @@ interface EmployeesDataBaseFun {
     fun listEmployees.getEmployeeWithLastBirthdayInThisYear(): Employee {
         val currentYear = java.util.Calendar.getInstance().time.year
         val currentTime = java.util.Calendar.getInstance().time.time
-        return this.first { employee ->
+        return EmployeesDataBase.listEmployees.filter { employee ->
             val birthday = SimpleDateFormat("yyyy-MM-dd")
                 .parse(employee.birthday)
                 .also { it.year = currentYear }.time
             birthday - currentTime < 0
-        }
+        }.first()
     }
 
     fun listEmployees.searchEmployees(subString: String): List<Employee> {

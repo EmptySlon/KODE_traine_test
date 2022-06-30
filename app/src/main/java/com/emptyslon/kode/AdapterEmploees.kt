@@ -53,7 +53,7 @@ class AdapterEmploees(
 
     override fun onBindViewHolder(holder: CategoriesHolder, position: Int) {
         val employee = listEmployees[position]
-        if (isSortedByBirthday) {
+        if (isSortedByBirthday && listEmployees.isNotEmpty()) {
             if (employee == listEmployees.getEmployeeWithLastBirthdayInThisYear()) {
                 holder.bindWithBirthday(employee, true)
             } else holder.bindWithBirthday(employee, false)

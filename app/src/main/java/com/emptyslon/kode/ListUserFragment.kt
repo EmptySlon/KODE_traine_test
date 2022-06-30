@@ -55,7 +55,7 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentListUserBinding.inflate(inflater, container, false)
-        AddTabInTabLayout()
+        addTabInTabLayout()
 
         typeSorted = getString(R.string.sorted_alphabet)
         valueTad = Common.listDepartment.first()
@@ -96,6 +96,8 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
         binding.inputSearch.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 Log.v("TAP", "tap!!")
+//                valueTad = with(binding.tabCategory) { getTabAt(selectedTabPosition)!!.text.toString() }
+
                 filteredEmployees = inputEmployees
                     .searchEmployees(s.toString())
                     .filterFromDepartment(valueTad)
@@ -163,7 +165,7 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
         private val KEY_OPTIONS = "OPTIONS"
     }
 
-    private fun AddTabInTabLayout() {
+    private fun addTabInTabLayout() {
         for (department in Common.listDepartment) {
             val newTab = binding.tabCategory.newTab()
             newTab.text = department
@@ -180,8 +182,11 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
             .setTitle(getString(R.string.sorting))
             .setSingleChoiceItems(listTypeSorters, checkedItem) { dialogInterface, i ->
                 typeSorted = listTypeSorters[i]
+                val valueSearch = binding.inputSearch.text.toString()
                 inputEmployees = inputEmployees.sortedByType(typeSorted)
-                filteredEmployees = inputEmployees.filterFromDepartment(valueTad)
+                filteredEmployees = inputEmployees
+                    .filterFromDepartment(valueTad)
+                    .searchEmployees(valueSearch)
                 adapter.listEmployees = filteredEmployees
                 adapter.isSortedByBirthday = typeSorted != listTypeSorters.first()
                 adapter.notifyDataSetChanged()
@@ -193,6 +198,8 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
             .show()
 
     }
+
+
 
 
 }
