@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentManager
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.common.Common.Companion.typeSorted
 import com.emptyslon.kode.contract.Navigator
+import com.emptyslon.kode.dataBase.Employee
 import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
 import com.emptyslon.kode.databinding.ActivityMainBinding
@@ -82,6 +83,23 @@ class MainActivity : AppCompatActivity(), Navigator  {
             .replace(R.id.fragmentContainer, ErrorWindowFragment())
             .commit()
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
+    }
+
+    override fun showEmployeeDetails(employee: Employee) {
+
+        supportFragmentManager
+            .beginTransaction()
+            .addToBackStack(null)
+            .add(R.id.fragmentContainer, DetailsEmployeeFragment(employee))
+            .commit()
+        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
+
+//        val detailsEmployeeFragment = DetailsEmployeeFragment(employee)
+//        parentFragmentManager
+//            .beginTransaction()
+//            .addToBackStack(null)
+//            .replace(R.id.placeHolderListUsers, detailsEmployeeFragment)
+//            .commit()
     }
 
 

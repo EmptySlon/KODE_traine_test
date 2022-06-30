@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import com.emptyslon.kode.Options
+import com.emptyslon.kode.dataBase.Employee
 
 
 typealias ResultListener<T> = (T) -> Unit
@@ -17,6 +18,8 @@ interface Navigator {
     fun restartFragment()
 
     fun showErrorFragment()
+
+    fun showEmployeeDetails(employee: Employee)
 
 
 //    fun showBoxSelectionScreen(options: Options)

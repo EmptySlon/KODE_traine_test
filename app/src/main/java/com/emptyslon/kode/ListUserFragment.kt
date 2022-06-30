@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.fragment_list_user.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.ParsePosition
 
 const val DRAWABLE_RIGHT = 2
 
@@ -53,7 +54,7 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentListUserBinding.inflate(inflater, container, false)
         addTabInTabLayout()
 
@@ -120,6 +121,16 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
             false
         })
 
+        adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener{
+            override fun onItemClick(position: Int) {
+
+                navigator().showEmployeeDetails(filteredEmployees[position])
+
+
+            }
+
+        })
+
 
         return binding.root
     }
@@ -135,6 +146,7 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
     private fun getData() {
         val retrofitData = RetrofitClient.retrofit.getData()
         retrofitData.enqueue(object : Callback<EmployeesData?> {
+            @SuppressLint("NotifyDataSetChanged")
             override fun onResponse(
                 call: Call<EmployeesData?>,
                 response: Response<EmployeesData?>
@@ -173,6 +185,7 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showAlertOfSorted(drawable: Drawable) {
         val listTypeSorters =
             arrayOf(getString(R.string.sorted_alphabet), getString(R.string.sorted_birthday))

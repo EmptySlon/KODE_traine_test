@@ -31,7 +31,7 @@ class AdapterEmploees(
 
 
     interface onItemClickListener {
-        fun onItemClick(employee: Employee)
+        fun onItemClick(position: Int)
     }
 
     fun setonItemClickListener(listener: onItemClickListener) {
@@ -43,12 +43,7 @@ class AdapterEmploees(
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_user, parent, false)
 
-        return CategoriesHolder(
-            view,
-//            mListener,
-            listEmployees,
-            isSortedByBirthday
-        )
+        return CategoriesHolder(view, mListener)
     }
 
     override fun onBindViewHolder(holder: CategoriesHolder, position: Int) {
@@ -66,17 +61,17 @@ class AdapterEmploees(
 
     class CategoriesHolder(
         private val view: View,
-//                           listener: onItemClickListener,
-        listEmployees: List<Employee>, isSortedByBirthday: Boolean
-    ) :
+        listener: onItemClickListener,
+
+        ) :
         RecyclerView.ViewHolder(view) {
 
-//        init {
-//            view.findViewById<ImageView>(R.id.avatar).setOnClickListener {
-//                listener.onItemClick(listEmployees[adapterPosition])
-//            }
-//
-//        }
+        init {
+            view.findViewById<ImageView>(R.id.avatar).setOnClickListener {
+                listener.onItemClick(adapterPosition)
+            }
+
+        }
 
 
         fun bind(employee: Employee) {
