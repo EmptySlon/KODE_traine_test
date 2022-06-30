@@ -76,6 +76,14 @@ class MainActivity : AppCompatActivity(), Navigator  {
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
     }
 
+    override fun showErrorFragment() {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, ErrorWindowFragment())
+            .commit()
+        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
+    }
+
 
 //    private fun updateUi() {
 //        val fragment = currentFragment

@@ -16,6 +16,8 @@ interface Navigator {
 
     fun restartFragment()
 
+    fun showErrorFragment()
+
 
 //    fun showBoxSelectionScreen(options: Options)
 //

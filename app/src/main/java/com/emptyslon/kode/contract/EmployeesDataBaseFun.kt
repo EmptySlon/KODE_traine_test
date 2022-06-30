@@ -18,17 +18,16 @@ interface EmployeesDataBaseFun {
 //        else EmployeesDataBase.listEmployees.filter { it.department.uppercase() == department.uppercase() }
 //    }
 
-//    fun getEmployeeWithLastBirthdayInThisYear(): Employee {
-
-    //    }
-//        }.first()
-//            birthday - currentTime < 0
-//                .also { it.year = currentYear }.time
-//                .parse(employee.birthday)
-//            val birthday = SimpleDateFormat("yyyy-MM-dd")
-//        return EmployeesDataBase.listEmployees.filter { employee ->
-//        val currentTime = java.util.Calendar.getInstance().time.time
-//        val currentYear = java.util.Calendar.getInstance().time.year
+    fun listEmployees.getEmployeeWithLastBirthdayInThisYear(): Employee {
+        val currentYear = java.util.Calendar.getInstance().time.year
+        val currentTime = java.util.Calendar.getInstance().time.time
+        return this.first { employee ->
+            val birthday = SimpleDateFormat("yyyy-MM-dd")
+                .parse(employee.birthday)
+                .also { it.year = currentYear }.time
+            birthday - currentTime < 0
+        }
+    }
 
     fun listEmployees.searchEmployees(subString: String): List<Employee> {
         return this.filter { employee ->

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.emptyslon.kode.common.Common
 import com.emptyslon.kode.contract.EmployeesDataBaseFun
+import com.emptyslon.kode.contract.navigator
 import com.emptyslon.kode.dataBase.Employee
 import com.emptyslon.kode.dataBase.EmployeesData
 import com.emptyslon.kode.dataBase.EmployeesDataBase
@@ -30,7 +31,7 @@ import retrofit2.Response
 
 const val DRAWABLE_RIGHT = 2
 
-class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
+class ListUserFragment : Fragment(), EmployeesDataBaseFun {
     lateinit var binding: FragmentListUserBinding
     private lateinit var options: Options
     var inputEmployees = listOf<Employee>()
@@ -56,24 +57,24 @@ class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
         binding = FragmentListUserBinding.inflate(inflater, container, false)
         AddTabInTabLayout()
 
-
-
         typeSorted = getString(R.string.sorted_alphabet)
         valueTad = Common.listDepartment.first()
-
 
         recyclerView = binding.recycleListUser
         recyclerView.layoutManager = LinearLayoutManager(activity)
         adapter = AdapterEmploees(inputEmployees)
         recyclerView.adapter = adapter
 
-
         getData()
 
         binding.tabCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 valueTad = tab!!.text.toString()
-                filteredEmployees = inputEmployees.filterFromDepartment(valueTad)
+                val valueSearch = binding.inputSearch.text.toString()
+                filteredEmployees = inputEmployees
+                    .filterFromDepartment(valueTad)
+                    .searchEmployees(valueSearch)
+                refreshEmptySearchHolder()
                 adapter.listEmployees = filteredEmployees
                 adapter.notifyDataSetChanged()
             }
@@ -95,13 +96,12 @@ class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
         binding.inputSearch.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 Log.v("TAP", "tap!!")
-                filteredEmployees = inputEmployees.searchEmployees(s.toString())
+                filteredEmployees = inputEmployees
+                    .searchEmployees(s.toString())
+                    .filterFromDepartment(valueTad)
                 adapter.listEmployees = filteredEmployees
                 adapter.notifyDataSetChanged()
-                with(binding.emptySearchHolder) {
-                    visibility = if (filteredEmployees.isEmpty()) View.VISIBLE
-                    else View.GONE
-                }
+                refreshEmptySearchHolder()
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -122,11 +122,13 @@ class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
         return binding.root
     }
 
-
-    override fun onDestroy() {
-        super.onDestroy()
-
+    private fun refreshEmptySearchHolder() {
+        with(binding.emptySearchHolder) {
+            visibility = if (filteredEmployees.isEmpty()) View.VISIBLE
+            else View.GONE
+        }
     }
+
 
     private fun getData() {
         val retrofitData = RetrofitClient.retrofit.getData()
@@ -149,7 +151,7 @@ class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
             }
 
             override fun onFailure(call: Call<EmployeesData?>, t: Throwable) {
-                Log.v("DATA", "NOT GET DATA!!!!!! ERROR!!!!!!!!!!!!!!!!!!")
+                navigator().showErrorFragment()
 
             }
         })
@@ -181,6 +183,7 @@ class ListUserFragment() : Fragment(), EmployeesDataBaseFun {
                 inputEmployees = inputEmployees.sortedByType(typeSorted)
                 filteredEmployees = inputEmployees.filterFromDepartment(valueTad)
                 adapter.listEmployees = filteredEmployees
+                adapter.isSortedByBirthday = typeSorted != listTypeSorters.first()
                 adapter.notifyDataSetChanged()
                 if (typeSorted == getString(R.string.sorted_birthday)) {
                     drawable.setTint(requireActivity().getColor(R.color.purple_700))
