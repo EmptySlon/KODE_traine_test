@@ -1,8 +1,5 @@
 package com.emptyslon.kode.common
 
-import com.emptyslon.kode.R
-import com.github.javafaker.App
-
 
 class Common {
 
@@ -28,7 +25,7 @@ class Common {
             "all", "android", "ios", "design", "management", "qa", "back_office",
             "frontend", "hr", "pr", "backend", "support", "analytics",
         )
-        lateinit var typeSorted: String
+
     }
 
 }

@@ -13,25 +13,14 @@ class ErrorWindowFragment : Fragment() {
 
     lateinit var binding: FragmentErrorWindowBinding
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        }
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = FragmentErrorWindowBinding.inflate(inflater, container, false)
-
         binding.errTxRebut.setOnClickListener {
             navigator().restartFragment()
         }
-
-
         return binding.root
     }
 

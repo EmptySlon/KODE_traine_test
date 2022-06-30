@@ -2,38 +2,30 @@ package com.emptyslon.kode.contract
 
 import android.icu.text.SimpleDateFormat
 import com.emptyslon.kode.dataBase.Employee
-import com.emptyslon.kode.dataBase.EmployeesDataBase
 
 typealias listEmployees = List<Employee>
 
 interface EmployeesDataBaseFun {
 
-//
-//    var listEmployees: MutableList<Employee>
-//
-//    fun deleteEmployees() = EmployeesDataBase.listEmployees.clear()
-//
-//    fun getListEmployeesFromDepartment(department: String): List<Employee> {
-//        return if (department.uppercase() == "ALL") EmployeesDataBase.listEmployees
-//        else EmployeesDataBase.listEmployees.filter { it.department.uppercase() == department.uppercase() }
-//    }
-
-    fun listEmployees.getEmployeeWithLastBirthdayInThisYear(): Employee {
+    fun listEmployees.getEmployeeWithLastBirthdayInThisYear(): Employee? {
         val currentYear = java.util.Calendar.getInstance().time.year
         val currentTime = java.util.Calendar.getInstance().time.time
-        return EmployeesDataBase.listEmployees.filter { employee ->
-            val birthday = SimpleDateFormat("yyyy-MM-dd")
-                .parse(employee.birthday)
-                .also { it.year = currentYear }.time
-            birthday - currentTime < 0
-        }.first()
+        return try {
+            this.filter { employee ->
+                val birthday = SimpleDateFormat("yyyy-MM-dd")
+                    .parse(employee.birthday)
+                    .also { it.year = currentYear }.time
+                birthday - currentTime < 0
+            }.first()
+        } catch (e: NoSuchElementException) {
+            null
+        }
     }
 
     fun listEmployees.searchEmployees(subString: String): List<Employee> {
         return this.filter { employee ->
             employee.isContainsSubstring(subString)
         }
-
     }
 
     fun listEmployees.sortedByType(type: String): List<Employee> {

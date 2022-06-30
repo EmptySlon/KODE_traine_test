@@ -19,7 +19,6 @@ import com.emptyslon.kode.contract.EmployeesDataBaseFun
 import com.emptyslon.kode.contract.navigator
 import com.emptyslon.kode.dataBase.Employee
 import com.emptyslon.kode.dataBase.EmployeesData
-import com.emptyslon.kode.dataBase.EmployeesDataBase
 import com.emptyslon.kode.databinding.FragmentListUserBinding
 import com.emptyslon.kode.retrofit.RetrofitClient
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,26 +27,18 @@ import kotlinx.android.synthetic.main.fragment_list_user.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.ParsePosition
+
 
 const val DRAWABLE_RIGHT = 2
 
 class ListUserFragment : Fragment(), EmployeesDataBaseFun {
     lateinit var binding: FragmentListUserBinding
-    private lateinit var options: Options
     var inputEmployees = listOf<Employee>()
     lateinit var filteredEmployees: List<Employee>
     lateinit var typeSorted: String
     lateinit var valueTad: String
-
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: AdapterEmploees
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        options = savedInstanceState?.getParcelable(KEY_OPTIONS) ?: Options.DEFAULT
-    }
 
 
     @SuppressLint("NotifyDataSetChanged", "ClickableViewAccessibility")
@@ -57,10 +48,8 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
     ): View {
         binding = FragmentListUserBinding.inflate(inflater, container, false)
         addTabInTabLayout()
-
         typeSorted = getString(R.string.sorted_alphabet)
         valueTad = Common.listDepartment.first()
-
         recyclerView = binding.recycleListUser
         recyclerView.layoutManager = LinearLayoutManager(activity)
         adapter = AdapterEmploees(inputEmployees)
@@ -88,17 +77,12 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
             binding.inputSearch
                 .compoundDrawables[DRAWABLE_RIGHT]
                 .setTint(requireActivity().getColor(R.color.grey2))
-            requireActivity().supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, ListUserFragment())
-                .commit()
+            navigator().restartFragment()
         }
 
         binding.inputSearch.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 Log.v("TAP", "tap!!")
-//                valueTad = with(binding.tabCategory) { getTabAt(selectedTabPosition)!!.text.toString() }
-
                 filteredEmployees = inputEmployees
                     .searchEmployees(s.toString())
                     .filterFromDepartment(valueTad)
@@ -121,25 +105,13 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
             false
         })
 
-        adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener{
+        adapter.setonItemClickListener(object : AdapterEmploees.onItemClickListener {
             override fun onItemClick(position: Int) {
-
                 navigator().showEmployeeDetails(filteredEmployees[position])
-
-
             }
-
         })
 
-
         return binding.root
-    }
-
-    private fun refreshEmptySearchHolder() {
-        with(binding.emptySearchHolder) {
-            visibility = if (filteredEmployees.isEmpty()) View.VISIBLE
-            else View.GONE
-        }
     }
 
 
@@ -151,14 +123,11 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
                 call: Call<EmployeesData?>,
                 response: Response<EmployeesData?>
             ) {
-                EmployeesDataBase.deleteEmployees()
+
                 val listEmployees = response.body()?.employees!!
                 listEmployees.map { it.avatarUrl = Common.listUrl.random() }
-
-                EmployeesDataBase.listEmployees = listEmployees.toMutableList()
                 inputEmployees = listEmployees.sortedByType(typeSorted)
                 filteredEmployees = inputEmployees
-
                 adapter.listEmployees = inputEmployees
                 adapter.notifyDataSetChanged()
                 binding.progressBar.visibility = ProgressBar.GONE
@@ -172,16 +141,18 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
     }
 
 
-    companion object {
-        @JvmStatic
-        private val KEY_OPTIONS = "OPTIONS"
-    }
-
     private fun addTabInTabLayout() {
         for (department in Common.listDepartment) {
             val newTab = binding.tabCategory.newTab()
             newTab.text = department
             binding.tabCategory.addTab(newTab)
+        }
+    }
+
+    private fun refreshEmptySearchHolder() {
+        with(binding.emptySearchHolder) {
+            visibility = if (filteredEmployees.isEmpty()) View.VISIBLE
+            else View.GONE
         }
     }
 
@@ -209,10 +180,6 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
                 dialogInterface.dismiss()
             }
             .show()
-
     }
-
-
-
 
 }
