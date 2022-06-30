@@ -37,7 +37,7 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
     lateinit var filteredEmployees: List<Employee>
     lateinit var typeSorted: String
     lateinit var valueTad: String
-    lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
     lateinit var adapter: AdapterEmploees
 
 
@@ -95,7 +95,7 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         })
 
-        binding.inputSearch.setOnTouchListener(View.OnTouchListener { v, event ->
+        binding.inputSearch.setOnTouchListener(View.OnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= inputSearch.right - inputSearch.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
                     showAlertOfSorted(inputSearch.compoundDrawables[DRAWABLE_RIGHT])
