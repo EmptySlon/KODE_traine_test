@@ -47,9 +47,9 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentListUserBinding.inflate(inflater, container, false)
-        addTabInTabLayout()
+//        addTabInTabLayout()
         typeSorted = getString(R.string.sorted_alphabet)
-        valueTad = Common.listDepartment.first()
+        valueTad = getString(R.string.all_employees)
         recyclerView = binding.recycleListUser
         recyclerView.layoutManager = LinearLayoutManager(activity)
         adapter = AdapterEmploees(inputEmployees)
@@ -127,6 +127,7 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
                 val listEmployees = response.body()?.employees!!
                 listEmployees.map { it.avatarUrl = Common.listUrl.random() }
                 inputEmployees = listEmployees.sortedByType(typeSorted)
+                addTabFromServerInTabLayout(inputEmployees.getSetOfDepartment())
                 filteredEmployees = inputEmployees
                 adapter.listEmployees = inputEmployees
                 adapter.notifyDataSetChanged()
@@ -141,8 +142,17 @@ class ListUserFragment : Fragment(), EmployeesDataBaseFun {
     }
 
 
-    private fun addTabInTabLayout() {
-        for (department in Common.listDepartment) {
+//    private fun addTabInTabLayout() {
+//        for (department in Common.listDepartment) {
+//            val newTab = binding.tabCategory.newTab()
+//            newTab.text = department
+//            binding.tabCategory.addTab(newTab)
+//        }
+//    }
+
+    private fun addTabFromServerInTabLayout(_setOfDepartment: Set<String>) {
+        val setOfDepartment = setOf(getString(R.string.all_employees)) + _setOfDepartment
+        for (department in setOfDepartment) {
             val newTab = binding.tabCategory.newTab()
             newTab.text = department
             binding.tabCategory.addTab(newTab)

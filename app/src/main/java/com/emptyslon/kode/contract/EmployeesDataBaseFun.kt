@@ -7,6 +7,9 @@ typealias listEmployees = List<Employee>
 
 interface EmployeesDataBaseFun {
 
+    fun listEmployees.getSetOfDepartment(): Set<String> = this.map{ it.department }.sorted().toSet()
+
+
     fun listEmployees.getEmployeeWithLastBirthdayInThisYear(): Employee? {
         val currentYear = java.util.Calendar.getInstance().time.year
         val currentTime = java.util.Calendar.getInstance().time.time

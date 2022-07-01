@@ -21,10 +21,12 @@ class Common {
             "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/0c/0c246fd6e75daa19fdd870127af87f2ba165a87c_full.jpg",
         )
 
-        val listDepartment = listOf(
-            "all", "android", "ios", "design", "management", "qa", "back_office",
-            "frontend", "hr", "pr", "backend", "support", "analytics",
-        )
+//        val listDepartment = listOf(
+//            "all", "android",
+////            "ios", "design", "management", "qa", "back_office",
+////            "frontend", "hr", "pr", "backend",
+////            "support", "analytics",
+//        )
 
     }
 

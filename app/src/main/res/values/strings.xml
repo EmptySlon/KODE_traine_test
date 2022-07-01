@@ -10,4 +10,5 @@
     <string name="sorting">Сортировка</string>
     <string name="try_search_again">Попробуй скорректировать запрос</string>
     <string name="nothing_found">Мы никого не нашли</string>
+    <string name="all_employees">all</string>
 </resources>
